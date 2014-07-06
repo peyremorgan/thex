@@ -29,12 +29,12 @@ package fr.manashield.flex.thex
 			
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
-			var testGrid:HexagonalGrid = new HexagonalGrid(stage, 50);
+			var gameGrid:HexagonalGrid = new HexagonalGrid(stage, 50);
 			
 			// Entry point
 			//_origin.x = this.stage.stageWidth / 2;
-			_origin.x = testGrid();
-			_origin.y = this.stage.stageHeight / 2;
+			//_origin.y = this.stage.stageHeight / 2;
+			_origin = gameGrid.hexToCart(0,0);
 
 			// Central hexagon
 			var mainHexagonBuilder : HexagonBuilder = new HexagonBuilder();
@@ -45,14 +45,12 @@ package fr.manashield.flex.thex
 			var centralHex : Hexagon = Hexagon(mainHexagonBuilder.build());			
 			this.addChild(centralHex);
 			
-			// Other hexagon test
+			// Others hexagons test
 			Animation.initialize(this.stage);
 			
-			mainHexagonBuilder.origin = new Point(300,0);
-			var testBlock:Hexagon = Hexagon(mainHexagonBuilder.build());
-			this.addChild(testBlock);
-			Animation.instance.addBlock(testBlock);
-			
+			mainHexagonBuilder.origin = gameGrid.hexToCart(1, 0);
+			var testBlock1:Hexagon = Hexagon(mainHexagonBuilder.build());
+			this.addChild(testBlock1);
 		}
 	}
 }
