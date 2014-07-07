@@ -7,15 +7,17 @@ package fr.manashield.flex.thex.geometry {
 	public class Polygon extends Shape
 	{
 		protected var _size:uint;
+		protected var _color:uint;
 		
 		public function Polygon(
 			sides:uint, 
-			origin:Point, 
+			origin:Point,
 			size:uint, 
 			color:uint = 0xFFFFFF, 
 			rotation:Number=0)
 		{
 			this._size = size;
+			this._color = color;
 			var theta:Number;
 			
 			this.graphics.lineStyle(2, 0x000000, 0.5);

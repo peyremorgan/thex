@@ -6,27 +6,54 @@ package fr.manashield.flex.thex {
 	 */
 	public class HexagonalGrid 
 	{
-		protected var grid:Object = new Object();
+		protected var _grid:Object;
+		protected var _stage:Stage;
+		protected var _gridSize:int;
 		
 		public function HexagonalGrid(stage:Stage, cellRadius:int, width:int = 10, height:int = 10) : void
 		{
-			var diapothem:Number = 2 * cellRadius * Math.cos(Math.PI/6);  // 1 diapothem = 2 times the apothem
 			var x:int, y:int;
+			
+			_grid = new Object();
+			_stage = stage;
+			_gridSize = cellRadius;
 			
 			for(var u:int = -width/2; u < width/2; ++u)
 			for(var v:int = -height/2; v < height/2; ++v)
 			{
-				x = diapothem*u*Math.cos(Math.PI/6) + stage.stageWidth/2;
-				y = - diapothem*(v + u*Math.sin(Math.PI/6)) + stage.stageHeight/2;
-				
-				this.grid[[u, v]] = new HexagonalCell(x, y);
+				x = diapothem()*u*Math.cos(Math.PI/6) + Number(_stage.stageWidth)/2;
+				y = - diapothem()*(v + u*Math.sin(Math.PI/6)) + Number(_stage.stageHeight)/2;
+
+				_grid[[u, v]] = new HexagonalCell(x, y, this);
 			}
 		}
 		
 		// Hexagonal to Cartesian coordinates conversion
-		public function hexToCart(u:int, v:int) : Point
+		public function hexToCartesian(point:Point) : Point
 		{
-			return this.grid[[u, v]].center;
+			//TODO: improve this method or remove the center attribut of the hexagonalCell
+			var x:int = diapothem()*point.x*Math.cos(Math.PI/6) + Number(_stage.stageWidth)/2;
+			var y:int = - diapothem()*(point.y + point.x*Math.sin(Math.PI/6)) + Number(_stage.stageHeight)/2;
+			
+			return new Point(x, y);
+		}
+		
+		public function cartesianToHex(point:Point) : Point
+		{
+			var u:int = Math.round((point.x - Number(_stage.stageWidth)/2)/(diapothem()*Math.cos(Math.PI/6)));
+			var v:int = Math.round(-(point.y - Number(_stage.stageHeight)/2)/diapothem() - u*Math.sin(Math.PI/6));
+
+			return new Point(u, v);
+		}
+		
+		public function get gridSize():int
+		{
+			return this._gridSize;
+		}
+
+		protected function diapothem():Number
+		{
+			return 2 * _gridSize * Math.cos(Math.PI/6);  // 1 diapothem = 2 times the apothem
 		}
 	}
 }

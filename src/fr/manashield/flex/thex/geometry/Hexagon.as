@@ -7,9 +7,9 @@ package fr.manashield.flex.thex.geometry
 	public class Hexagon extends Polygon
 	{
 		public function Hexagon(
-			origin:Point, 
-			size:uint, 
-			color:uint = 0xFFFFFF, 
+			origin:Point,
+			size:uint,
+			color:uint = 0xFFFFFF,
 			rotation:Number=0)
 		{
 			super(6, origin, size, color, rotation);
