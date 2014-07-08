@@ -5,7 +5,8 @@ package fr.manashield.flex.thex {
 	import flash.display.Stage;
 	import flash.geom.Point;
 	/**
-	 * @author Morgan
+	 * @author Morgan Peyre (morgan@peyre.info)
+	 * @author Paul Bonnet
 	 */
 	public class Game
 	{
@@ -21,16 +22,10 @@ package fr.manashield.flex.thex {
 			_origin = _origin = _gameGrid.hexToCartesian(new Point(0,0));
 			
 			// Central hexagon
-			var gameHexagonBuilder : HexagonBuilder = new HexagonBuilder();
-			gameHexagonBuilder.origin = _origin;
-			gameHexagonBuilder.size = 50;
-			gameHexagonBuilder.color = 0x1BBDCD;
-			
-			var centralHex:Hexagon = Hexagon(gameHexagonBuilder.build());
-			_stage.addChild(centralHex);
+			var centralBlock:Block = new Block(_gameGrid.cell(new Point(0,0)), Color.BLUE);
 			
 			// hex test
-			var toto:Block = new Block(_gameGrid.cell(new Point(-4,2)), Color.RED);
+			var toto:Block = new Block(_gameGrid.cell(new Point(-2,2)), Color.RED);
 			
 			Animation.initialize(this);
 			Animation.instance.addBlock(toto);

@@ -2,7 +2,8 @@ package fr.manashield.flex.thex {
 	import flash.geom.Point;
 	import flash.display.Stage;
 	/**
-	 * @author Morgan
+	 * @author Morgan Peyre (morgan@peyre.info)
+	 * @author Paul Bonnet
 	 */
 	public class HexagonalGrid 
 	{

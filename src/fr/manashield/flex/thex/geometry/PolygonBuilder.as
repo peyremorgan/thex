@@ -3,7 +3,8 @@ package fr.manashield.flex.thex.geometry
 	import flash.geom.Point;
 
 	/**
-	 * @author Morgan Peyre
+	 * @author Morgan Peyre (morgan@peyre.info)
+	 * @author Paul Bonnet
 	 */
 	public class PolygonBuilder 
 	{

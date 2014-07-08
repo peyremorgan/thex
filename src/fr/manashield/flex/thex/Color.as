@@ -1,7 +1,8 @@
 package fr.manashield.flex.thex 
 {
 	/**
-	 * @author Morgan
+	 * @author Morgan Peyre (morgan@peyre.info)
+	 * @author Paul Bonnet
 	 */
 	public class Color 
 	{

@@ -5,7 +5,7 @@ package fr.manashield.flex.thex
 
 	[SWF(width="600",height="400",backgroundColor="#ffffff")]
 	/**
-	 * @author Morgan Peyre
+	 * @author Morgan Peyre (morgan@peyre.info)
 	 * @author Paul Bonnet
 	 */
 	public class Main extends Sprite 

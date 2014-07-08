@@ -4,7 +4,8 @@ package fr.manashield.flex.thex {
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	/**
-	 * @author Morgan
+	 * @author Morgan Peyre (morgan@peyre.info)
+	 * @author Paul Bonnet
 	 */
 	public final class Animation
 	{
