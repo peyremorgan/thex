@@ -1,6 +1,7 @@
 package fr.manashield.flex.thex {
 	import fr.manashield.flex.thex.geometry.Hexagon;
 	import fr.manashield.flex.thex.geometry.HexagonBuilder;
+
 	import flash.display.Stage;
 	import flash.geom.Point;
 	/**
@@ -29,16 +30,13 @@ package fr.manashield.flex.thex {
 			_stage.addChild(centralHex);
 			
 			// hex test
-			gameHexagonBuilder.origin = _gameGrid.hexToCartesian(new Point(3,1));
-			gameHexagonBuilder.color = 0xFFFF00;
-			var toto:Hexagon = Hexagon(gameHexagonBuilder.build());
+			var toto:Block = new Block(_gameGrid.cell(new Point(-4,2)), Color.RED);
 			
-			_stage.addChild(toto);
 			Animation.initialize(this);
 			Animation.instance.addBlock(toto);
 		}
 		
-		public function get stage():Stage
+		public function get stage():Stage	
 		{
 			return _stage;
 		}
