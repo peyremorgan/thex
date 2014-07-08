@@ -1,4 +1,4 @@
 thex
 ====
 
-(te)tris on an hexagon
+Gravity-enabled bubble shooter on an hexagon
