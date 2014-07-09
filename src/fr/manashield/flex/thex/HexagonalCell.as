@@ -49,7 +49,7 @@ package fr.manashield.flex.thex
 		public function get nearestNeighborToCenter():HexagonalCell
 		{
 			/*TESTING*/
-			return this.clockwiseNeighbor;
+			return this.counterClockwiseNeighbor;
 			/*
 			var closeCell:HexagonalCell;
 			var shortestSquareDistance:uint = uint.MAX_VALUE;
@@ -103,24 +103,24 @@ package fr.manashield.flex.thex
 			
 			return this._parent.cell(neighbor);
 		}
-		
-		// Untested method
+
 		public function get counterClockwiseNeighbor():HexagonalCell
 		{
 			var x:Number = _hexCoordinates.x;
 			var y:Number = _hexCoordinates.y;
+			var sign:Number;
 			
 			if(x*y > 0 || y == 0)
 			{
-				var sign:Number = (x>0?1:-1);
+				sign = (x>0?1:-1);
 				
 				x-=sign;
 				y+=sign;
 			} else
 			{
-				var sign:Number = (y>0?1:-1);
+				sign = (y>0?1:-1);
 				
-				Math.abs(x)>Math.abs(y)?y+=sign:x-=sign;
+				Math.abs(x)>=Math.abs(y)?y-=sign:x-=sign;
 			}
 			
 			return this._parent.cell(new Point(x, y));
