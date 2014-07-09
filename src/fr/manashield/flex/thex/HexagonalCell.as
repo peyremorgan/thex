@@ -12,7 +12,6 @@ package fr.manashield.flex.thex
 		protected var _hexCoordinates:Point;
 		protected var _parent:HexagonalGrid;
 		
-		//public function HexagonalCell(x:int, y:int, parent:HexagonalGrid = null)
 		public function HexagonalCell(position:Point, parent:HexagonalGrid = null)
 		{
 			_hexCoordinates = position;
@@ -104,11 +103,28 @@ package fr.manashield.flex.thex
 			
 			return this._parent.cell(neighbor);
 		}
-		/*
+		
+		// Untested method
 		public function get counterClockwiseNeighbor():HexagonalCell
 		{
+			var x:Number = _hexCoordinates.x;
+			var y:Number = _hexCoordinates.y;
+			
+			if(x*y > 0 || y == 0)
+			{
+				var sign:Number = (x>0?1:-1);
+				
+				x-=sign;
+				y+=sign;
+			} else
+			{
+				var sign:Number = (y>0?1:-1);
+				
+				Math.abs(x)>Math.abs(y)?y+=sign:x-=sign;
+			}
+			
+			return this._parent.cell(new Point(x, y));
 			
 		}
-		*/
 	}
 }
