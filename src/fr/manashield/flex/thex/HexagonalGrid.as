@@ -11,7 +11,7 @@ package fr.manashield.flex.thex {
 		protected var _stage:Stage;
 		protected var _gridSize:int;
 		
-		public function HexagonalGrid(stage:Stage, cellRadius:int, width:int = 10, height:int = 10) : void
+		public function HexagonalGrid(stage:Stage, cellRadius:int, width:int = 100, height:int = 100) : void
 		{			
 			_grid = new Object();
 			_stage = stage;

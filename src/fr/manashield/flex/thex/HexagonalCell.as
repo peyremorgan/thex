@@ -47,9 +47,6 @@ package fr.manashield.flex.thex
 		
 		public function get nearestNeighborToCenter():HexagonalCell
 		{
-			/*TESTING*/
-			return this.clockwiseNeighbor;
-			/*
 			var closeCell:HexagonalCell;
 			var shortestSquareDistance:uint = uint.MAX_VALUE;
 			var candidateSquareDistance:uint;
@@ -65,7 +62,7 @@ package fr.manashield.flex.thex
 				}
 			}
 			
-			return closeCell;*/
+			return closeCell;
 		}
 		
 		public function get distanceToCenter():Number

@@ -7,11 +7,14 @@ package fr.manashield.flex.thex
 	 */
 	public class Abstract 
 	{
-		protected var isAbstract:Boolean = true;
-		
 		public function Abstract():void
 		{
-			if(this.isAbstract) throw new IllegalOperationError("Can't instantiate abstract class ");
+			if(this.isAbstract()) throw new IllegalOperationError("Can't instantiate abstract class ");
+		}
+		
+		public function isAbstract():Boolean
+		{
+			return true;
 		}
 	}
 }

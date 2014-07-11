@@ -1,5 +1,8 @@
 package fr.manashield.flex.thex 
 {
+	import fr.manashield.flex.thex.events.RotateBlockEvent;
+	import fr.manashield.flex.thex.userInterface.UserInteraction;
+	import fr.manashield.flex.thex.userInterface.IngameUserInteraction;
 	import flash.display.Sprite;
 	import flash.events.Event;
 
@@ -10,6 +13,8 @@ package fr.manashield.flex.thex
 	 */
 	public class Main extends Sprite 
 	{
+		protected var _currentUI:UserInteraction;
+		
 		public function Main() : void 
 		{
 			if (stage)
@@ -24,6 +29,11 @@ package fr.manashield.flex.thex
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
 			new Game(stage);
+			
+			_currentUI = new IngameUserInteraction(stage);
+			
+			_currentUI.addEventListener(RotateBlockEvent.ROTATE_CW, Animation.instance.moveBlocksClockwise);
+			_currentUI.addEventListener(RotateBlockEvent.ROTATE_CCW, Animation.instance.moveBlocksCounterClockwise);
 		}
 	}
 }
