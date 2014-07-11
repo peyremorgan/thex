@@ -1,6 +1,5 @@
 package fr.manashield.flex.thex 
 {
-	import fr.manashield.flex.thex.util.MathEx;
 	import flash.display.Stage;
 	import flash.geom.Point;
 	/**
@@ -49,7 +48,7 @@ package fr.manashield.flex.thex
 		public function get nearestNeighborToCenter():HexagonalCell
 		{
 			/*TESTING*/
-			return this.counterClockwiseNeighbor;
+			return this.clockwiseNeighbor;
 			/*
 			var closeCell:HexagonalCell;
 			var shortestSquareDistance:uint = uint.MAX_VALUE;
@@ -81,27 +80,22 @@ package fr.manashield.flex.thex
 		{
 			var x:Number = _hexCoordinates.x;
 			var y:Number = _hexCoordinates.y;
-			var neighbor:Point;
+			var sign:Number;
 			
 			if(x*y > 0 || x == 0)
 			{
-				neighbor = new Point(x+MathEx.sgn(y), y-MathEx.sgn(y));
-			} 
-			else 
-			{
-				var r:uint = Math.max(Math.abs(x), Math.abs(y)); // Hexagon radius
+				sign = (y>0?1:-1);
 				
-				if(Math.abs(y)<r)
-				{
-					neighbor = new Point(x, y - MathEx.sgn(x));
-				}
-				else
-				{
-					neighbor = new Point(x - MathEx.sgn(x), y);
-				}
+				x+=sign;
+				y-=sign;
+			} else
+			{
+				sign = (x>0?1:-1);
+				
+				Math.abs(x)>Math.abs(y)?y-=sign:x-=sign;
 			}
 			
-			return this._parent.cell(neighbor);
+			return this._parent.cell(new Point(x, y));
 		}
 
 		public function get counterClockwiseNeighbor():HexagonalCell
@@ -124,7 +118,6 @@ package fr.manashield.flex.thex
 			}
 			
 			return this._parent.cell(new Point(x, y));
-			
 		}
 	}
 }

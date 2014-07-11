@@ -1,6 +1,7 @@
 package fr.manashield.flex.thex {
 	import flash.display.Stage;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	/**
@@ -22,9 +23,21 @@ package fr.manashield.flex.thex {
 		{
 			_stage = game.stage;
 			_grid = game.grid;
-
+			
+			// Listeners
+			_stage.addEventListener(KeyboardEvent.KEY_DOWN, _instance.moveBlocksClockwise);
 			_instance.fallTimer.addEventListener(TimerEvent.TIMER, _instance.moveBlocksToCenter);
+
 			_instance.fallTimer.start();
+		}
+		
+		
+		public function moveBlocksClockwise(e : KeyboardEvent):void
+		{
+			for each(var block:Block in fallingBlocks)
+			{
+				block.moveTo(block.currentCell.clockwiseNeighbor.hexCoordinates);
+			}
 		}
 
 		public static function get instance():Animation

@@ -1,7 +1,8 @@
 package fr.manashield.flex.thex 
 {
-	import flash.geom.Point;
 	import fr.manashield.flex.thex.geometry.Hexagon;
+
+	import flash.geom.Point;
 	/**
 	 * @author Morgan Peyre (morgan@peyre.info)
 	 * @author Paul Bonnet

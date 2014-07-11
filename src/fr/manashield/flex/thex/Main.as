@@ -22,7 +22,7 @@ package fr.manashield.flex.thex
 		{
 			// Entry point
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-
+			
 			new Game(stage);
 		}
 	}

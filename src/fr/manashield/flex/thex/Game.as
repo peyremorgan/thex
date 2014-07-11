@@ -1,7 +1,4 @@
 package fr.manashield.flex.thex {
-	import fr.manashield.flex.thex.geometry.Hexagon;
-	import fr.manashield.flex.thex.geometry.HexagonBuilder;
-
 	import flash.display.Stage;
 	import flash.geom.Point;
 	/**
@@ -23,6 +20,7 @@ package fr.manashield.flex.thex {
 			
 			// Central hexagon
 			var centralBlock:Block = new Block(_gameGrid.cell(new Point(0,0)), Color.BLUE);
+			Animation.instance.addBlock(centralBlock);
 			
 			// hex test
 			var toto:Block = new Block(_gameGrid.cell(new Point(-2,2)), Color.RED);
