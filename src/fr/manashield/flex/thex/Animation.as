@@ -1,12 +1,11 @@
 package fr.manashield.flex.thex {
-
-	import fr.manashield.flex.thex.events.BlockLandingEvent;
-	import flash.events.Event;
-	import flash.events.EventDispatcher;
 	import fr.manashield.flex.thex.blocks.Block;
+	import fr.manashield.flex.thex.events.BlockLandingEvent;
 	import fr.manashield.flex.thex.events.RotateBlockEvent;
 
 	import flash.display.Stage;
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	/**
@@ -79,12 +78,20 @@ package fr.manashield.flex.thex {
 			{
 				fallingBlocks.splice(fallingBlocks.lastIndexOf(block), 1);
 				staticBlocks.push(block);
-				this.dispatchEvent(new BlockLandingEvent());
+				//trace(block.symbol.alpha);
+				block.symbol.alpha = 0.77;
+				this.dispatchEvent(new BlockLandingEvent(block));
 			}
 			else
 			{
 				block.moveTo(block.currentCell.nearestNeighborToCenter.hexCoordinates);
 			}
 		}
+		
+		public function forceFall(e:Event):void
+		{
+			moveBlocksToCenter(null);
+		}
+		
 	}
 }

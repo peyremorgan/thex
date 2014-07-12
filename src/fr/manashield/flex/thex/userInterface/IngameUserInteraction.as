@@ -1,5 +1,6 @@
 package fr.manashield.flex.thex.userInterface 
 {
+	import fr.manashield.flex.thex.events.ForceFallEvent;
 	import fr.manashield.flex.thex.events.RotateBlockEvent;
 
 	import flash.display.Stage;
@@ -33,6 +34,9 @@ package fr.manashield.flex.thex.userInterface
 				case Keyboard.LEFT:
 				this.localEventDispatcher.dispatchEvent(new RotateBlockEvent(RotateBlockEvent.ROTATE_CCW));
 				break;
+				
+				case Keyboard.DOWN:
+				this.localEventDispatcher.dispatchEvent(new ForceFallEvent());
 			}
 		}
 	}

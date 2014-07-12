@@ -1,5 +1,6 @@
 package fr.manashield.flex.thex 
 {
+	import fr.manashield.flex.thex.events.ForceFallEvent;
 	import fr.manashield.flex.thex.events.RotateBlockEvent;
 
 	import fr.manashield.flex.thex.userInterface.IngameUserInteraction;
@@ -35,6 +36,7 @@ package fr.manashield.flex.thex
 			
 			_currentUI.addEventListener(RotateBlockEvent.ROTATE_CW, Animation.instance.moveBlocksClockwise);
 			_currentUI.addEventListener(RotateBlockEvent.ROTATE_CCW, Animation.instance.moveBlocksCounterClockwise);
+			_currentUI.addEventListener(ForceFallEvent.FORCE_FALL, Animation.instance.forceFall);
 		}
 	}
 }

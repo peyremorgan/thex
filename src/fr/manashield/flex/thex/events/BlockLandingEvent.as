@@ -1,4 +1,5 @@
 package fr.manashield.flex.thex.events {
+	import fr.manashield.flex.thex.blocks.Block;
 	import flash.events.Event;
 	/**
 	 * @author Morgan Peyre (morgan@peyre.info)
@@ -8,9 +9,17 @@ package fr.manashield.flex.thex.events {
 	{
 		public static const LANDING:String = "blockLanding";
 		
-		public function BlockLandingEvent():void
+		protected var _block:Block;
+		
+		public function BlockLandingEvent(block:Block = null):void
 		{
+			this._block = block;
 			super(LANDING);
+		}
+		
+		public function get block():Block
+		{
+			return this._block;
 		}
 	}
 }

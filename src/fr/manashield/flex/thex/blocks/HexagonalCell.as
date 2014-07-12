@@ -11,12 +11,14 @@ package fr.manashield.flex.thex.blocks
 		protected var _hexCoordinates:Point;
 		protected var _parent:HexagonalGrid;
 		protected var _isOccupied:Boolean;
+		protected var _block:Block;
 		
-		public function HexagonalCell(position:Point, parent:HexagonalGrid = null, occupied:Boolean = false)
+		public function HexagonalCell(position:Point, parent:HexagonalGrid = null, occupied:Boolean = false, block:Block = null)
 		{
 			_hexCoordinates = position;
 			_parent = parent;
 			_isOccupied = occupied;
+			_block = block;
 		}
 		
 		public function get center():Point
@@ -49,6 +51,8 @@ package fr.manashield.flex.thex.blocks
 		
 		public function get nearestNeighborToCenter():HexagonalCell
 		{
+			if(this.hexCoordinates == new Point(0,0)) return this;
+			
 			var closeCell:HexagonalCell;
 			var shortestSquareDistance:uint = uint.MAX_VALUE;
 			var candidateSquareDistance:uint;
@@ -127,6 +131,16 @@ package fr.manashield.flex.thex.blocks
 		public function set occupied(newState:Boolean):void
 		{
 			this._isOccupied = newState;
+		}
+		
+		public function get block():Block
+		{
+			return this._block;
+		}
+		
+		public function set block(newBlock:Block):void
+		{
+			this._block = newBlock;
 		}
 	}
 }

@@ -1,5 +1,4 @@
-package fr.manashield.flex.thex.blocks
-{
+package fr.manashield.flex.thex.blocks {
 	import fr.manashield.flex.thex.geometry.Hexagon;
 	import fr.manashield.flex.thex.utils.Color;
 
@@ -21,6 +20,7 @@ package fr.manashield.flex.thex.blocks
 			this._symbol = new Hexagon(startCell.center, startCell.parent.gridSize, color.hexValue);
 			
 			startCell.occupied = true;
+			startCell.block = this;
 			startCell.parent.stage.addChild(this._symbol);
 		}
 		
@@ -42,12 +42,85 @@ package fr.manashield.flex.thex.blocks
 		public function moveTo(newHexCoordinates:Point):void
 		{
 			this._currentCell.occupied = false;
+			this._currentCell.block = null;
 			this._currentCell = this._currentCell.parent.cell(newHexCoordinates);
-			this.currentCell.occupied = true;
+			this._currentCell.occupied = true;
+			this._currentCell.block = this;
 			
 			var newCartesianCoordinates:Point = this._currentCell.parent.hexToCartesian(newHexCoordinates);
 			this._symbol.x = newCartesianCoordinates.x;
 			this._symbol.y = newCartesianCoordinates.y;
+		}
+		
+		public function destroy():void
+		{			
+			this.currentCell.occupied = false;
+			this.currentCell.block = null;
+			
+			this.symbol.parent.removeChild(this.symbol);
+		}
+		
+		public function destroyIf(color:Color, visitedBlocks:Vector.<Block> = null):void
+		{
+			if(!visitedBlocks)
+			{
+				visitedBlocks = new Vector.<Block>();
+			}
+			
+			visitedBlocks.push(this);
+			
+			if (this._color == color)
+			{
+				for each(var neighbor:Block in this.neighbors)
+				{
+					if(neighbor.color == visitedBlocks[0].color && visitedBlocks.lastIndexOf(neighbor) == -1)
+					{
+						neighbor.destroyIf(color, visitedBlocks);
+					}
+				}
+				
+				this.destroy();
+			}
+		}
+		
+		public function get neighbors():Vector.<Block>
+		{
+			var neighbors:Vector.<Block> = new Vector.<Block>();
+			
+			for each(var cell:HexagonalCell in this._currentCell.neighbors)
+			{
+				if(cell.occupied)
+				{
+					neighbors.push(cell.block);
+				}
+			}
+			
+			return neighbors;
+		}
+		
+		public function get color():Color
+		{
+			return this._color;
+		}
+		
+		public function sameColorNeighbors(visitedBlocks:Vector.<Block> = null):uint
+		{		
+			if(!visitedBlocks)
+			{
+				visitedBlocks = new Vector.<Block>();
+			}
+			
+			visitedBlocks.push(this);
+			
+			for each(var neighbor:Block in this.neighbors)
+			{
+				if(neighbor.color == visitedBlocks[0].color && visitedBlocks.lastIndexOf(neighbor) == -1)
+				{
+					neighbor.sameColorNeighbors(visitedBlocks);
+				}
+			}
+			
+			return visitedBlocks.length;
 		}
 	}
 }
