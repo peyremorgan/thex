@@ -1,19 +1,22 @@
 package fr.manashield.flex.thex {
+	import fr.manashield.flex.thex.events.BlockLandingEvent;
+	import flash.events.EventDispatcher;
+	import fr.manashield.flex.thex.blocks.Block;
+	import fr.manashield.flex.thex.events.RotateBlockEvent;
+
 	import flash.display.Stage;
 	import flash.events.Event;
-	import flash.events.KeyboardEvent;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	/**
 	 * @author Morgan Peyre (morgan@peyre.info)
 	 * @author Paul Bonnet
 	 */
-	public final class Animation
+	public final class Animation extends EventDispatcher
 	{
 
 		private static var _instance:Animation = new Animation();
 		private static var _stage:Stage;
-		private static var _grid:HexagonalGrid;
 
 		private var fallingBlocks:Vector.<Block> = new Vector.<Block>();
 		private var staticBlocks:Vector.<Block> = new Vector.<Block>();
@@ -22,21 +25,26 @@ package fr.manashield.flex.thex {
 		public static function initialize(game:Game):void
 		{
 			_stage = game.stage;
-			_grid = game.grid;
 			
 			// Listeners
-			_stage.addEventListener(KeyboardEvent.KEY_DOWN, _instance.moveBlocksClockwise);
 			_instance.fallTimer.addEventListener(TimerEvent.TIMER, _instance.moveBlocksToCenter);
-
 			_instance.fallTimer.start();
 		}
 		
 		
-		public function moveBlocksClockwise(e : KeyboardEvent):void
+		public function moveBlocksClockwise(e : RotateBlockEvent):void
 		{
 			for each(var block:Block in fallingBlocks)
 			{
 				block.moveTo(block.currentCell.clockwiseNeighbor.hexCoordinates);
+			}
+		}
+		
+		public function moveBlocksCounterClockwise(e : RotateBlockEvent):void
+		{
+			for each(var block:Block in fallingBlocks)
+			{
+				block.moveTo(block.currentCell.counterClockwiseNeighbor.hexCoordinates);
 			}
 		}
 
@@ -64,6 +72,7 @@ package fr.manashield.flex.thex {
 			{
 				fallingBlocks.splice(fallingBlocks.lastIndexOf(block), 1);
 				staticBlocks.push(block);
+				this.dispatchEvent(new BlockLandingEvent());
 			}
 			else
 			{

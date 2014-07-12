@@ -1,4 +1,11 @@
-package fr.manashield.flex.thex {
+package fr.manashield.flex.thex
+{
+	import fr.manashield.flex.thex.events.BlockLandingEvent;
+	import fr.manashield.flex.thex.blocks.BlockGenerator;
+	import fr.manashield.flex.thex.utils.Color;
+	import fr.manashield.flex.thex.blocks.Block;
+	import fr.manashield.flex.thex.blocks.HexagonalGrid;
+
 	import flash.display.Stage;
 	import flash.geom.Point;
 	/**
@@ -7,36 +14,33 @@ package fr.manashield.flex.thex {
 	 */
 	public class Game
 	{
+		private static const CELL_RADIUS:uint = 50;
+		
 		protected var _stage:Stage;
 		protected var _origin:Point;
-		protected var _gameGrid:HexagonalGrid;
 		
 		public function Game(stage:Stage):void
 		{
 			// Game board
 			_stage = stage;
-			_gameGrid = new HexagonalGrid(_stage, 50);
-			_origin = _origin = _gameGrid.hexToCartesian(new Point(0,0));
+			HexagonalGrid.init(_stage, CELL_RADIUS);
+			_origin = _origin = HexagonalGrid.instance.hexToCartesian(new Point(0,0));
 			
 			// Central hexagon
-			var centralBlock:Block = new Block(_gameGrid.cell(new Point(0,0)), Color.BLUE);
-			Animation.instance.addBlock(centralBlock);
+			var centralBlock:Block = new Block(HexagonalGrid.instance.cell(new Point(0,0)), new Color(0xCACACA));
+			trace(centralBlock); // Get rid of the annoying "not used" warning.
 			
 			// hex test
-			var toto:Block = new Block(_gameGrid.cell(new Point(-2,2)), Color.RED);
+			//var toto:Block = new Block(_gameGrid.cell(new Point(0,3)), Color.RANDOM);
+			
+			BlockGenerator.instance.spawnBlock();
 			
 			Animation.initialize(this);
-			Animation.instance.addBlock(toto);
 		}
 		
 		public function get stage():Stage	
 		{
 			return _stage;
-		}
-		
-		public function get grid():HexagonalGrid
-		{
-			return _gameGrid;
 		}
 	}
 }

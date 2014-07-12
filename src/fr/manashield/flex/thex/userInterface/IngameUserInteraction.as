@@ -1,8 +1,10 @@
 package fr.manashield.flex.thex.userInterface 
 {
 	import fr.manashield.flex.thex.events.RotateBlockEvent;
-	import flash.ui.Keyboard;
+
+	import flash.display.Stage;
 	import flash.events.KeyboardEvent;
+	import flash.ui.Keyboard;
 
 	/**
 	 * @author Morgan Peyre (morgan@peyre.info)
@@ -10,13 +12,17 @@ package fr.manashield.flex.thex.userInterface
 	 */
 	public class IngameUserInteraction extends UserInteraction 
 	{
-		public function IngameUserInteraction() 
+		public function IngameUserInteraction(stage:Stage):void
 		{
-			this.isAbstract = false;
-			super();
+			super(true, stage);
 		}
 		
-		override function keyPressed(e:KeyboardEvent):void
+		public override function isAbstract():Boolean
+		{
+			return false;
+		}
+		
+		override public function keyPressed(e:KeyboardEvent):void
 		{
 			switch(e.keyCode)
 			{

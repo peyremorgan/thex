@@ -1,9 +1,10 @@
 package fr.manashield.flex.thex.userInterface 
 {
-	import flash.events.EventDispatcher;
-	import fr.manashield.flex.thex.Abstract;
+	import fr.manashield.flex.thex.utils.Abstract;
 
+	import flash.display.Stage;
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
@@ -16,12 +17,28 @@ package fr.manashield.flex.thex.userInterface
 	{
 		public var localEventDispatcher:EventDispatcher;
 		
-		function mousePressed(e:MouseEvent):void{}
-		function mouseReleased(e:MouseEvent):void{}
+		public function mousePressed(e:MouseEvent):void{}
+		public function mouseReleased(e:MouseEvent):void{}
 		
-		function keyPressed(e:KeyboardEvent):void{}
-		function keyReleased(e : KeyboardEvent) : void {}
-
+		public function keyPressed(e:KeyboardEvent):void{}
+		public function keyReleased(e:KeyboardEvent):void{}
+		
+		public function UserInteraction(initializeEventListener:Boolean = false, stage:Stage = null)
+		{
+			if(initializeEventListener)
+			{
+				this.localEventDispatcher = new EventDispatcher();
+			}
+			
+			if(stage)
+			{
+				stage.addEventListener(KeyboardEvent.KEY_DOWN, this.keyPressed);
+				stage.addEventListener(KeyboardEvent.KEY_UP, this.keyReleased);
+				stage.addEventListener(MouseEvent.MOUSE_DOWN, this.mousePressed);
+				stage.addEventListener(MouseEvent.MOUSE_UP, this.mouseReleased);
+			}
+		}
+		
 		public function addEventListener(type : String, listener : Function, useCapture : Boolean = false, priority : int = 0, useWeakReference : Boolean = false) : void
 		{
 			this.localEventDispatcher.addEventListener(type, listener, useCapture, priority, useWeakReference);

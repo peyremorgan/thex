@@ -1,4 +1,5 @@
-package fr.manashield.flex.thex.events {
+package fr.manashield.flex.thex.events
+{
 	import flash.events.Event;
 	/**
 	 * @author Morgan Peyre (morgan@peyre.info)
