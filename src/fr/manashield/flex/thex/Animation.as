@@ -1,11 +1,12 @@
 package fr.manashield.flex.thex {
+
 	import fr.manashield.flex.thex.events.BlockLandingEvent;
+	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import fr.manashield.flex.thex.blocks.Block;
 	import fr.manashield.flex.thex.events.RotateBlockEvent;
 
 	import flash.display.Stage;
-	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	/**

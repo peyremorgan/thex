@@ -1,10 +1,8 @@
-package fr.manashield.flex.thex
-{
-	import fr.manashield.flex.thex.events.BlockLandingEvent;
-	import fr.manashield.flex.thex.blocks.BlockGenerator;
-	import fr.manashield.flex.thex.utils.Color;
+package fr.manashield.flex.thex {
 	import fr.manashield.flex.thex.blocks.Block;
+	import fr.manashield.flex.thex.blocks.BlockGenerator;
 	import fr.manashield.flex.thex.blocks.HexagonalGrid;
+	import fr.manashield.flex.thex.utils.Color;
 
 	import flash.display.Stage;
 	import flash.geom.Point;

@@ -1,7 +1,6 @@
 package fr.manashield.flex.thex.userInterface 
 {
 	import fr.manashield.flex.thex.utils.Abstract;
-
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;

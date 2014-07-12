@@ -1,9 +1,9 @@
 package fr.manashield.flex.thex 
 {
 	import fr.manashield.flex.thex.events.RotateBlockEvent;
+
 	import fr.manashield.flex.thex.userInterface.IngameUserInteraction;
 	import fr.manashield.flex.thex.userInterface.UserInteraction;
-
 	import flash.display.Sprite;
 	import flash.events.Event;
 
@@ -13,7 +13,7 @@ package fr.manashield.flex.thex
 	 * @author Paul Bonnet
 	 */
 	public class Main extends Sprite 
-	{		
+	{
 		protected var _currentUI:UserInteraction;
 		
 		public function Main() : void 
