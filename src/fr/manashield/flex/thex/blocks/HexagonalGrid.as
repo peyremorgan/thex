@@ -30,6 +30,8 @@ package fr.manashield.flex.thex.blocks
 			{
 				_grid[[u, v]] = new HexagonalCell(new Point(u, v), this);
 			}
+			
+			HexagonalCell(_grid[[0,0]]).occupied = true;
 		}
 		
 		// Hexagonal to Cartesian coordinates conversion

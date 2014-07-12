@@ -36,7 +36,10 @@ package fr.manashield.flex.thex {
 		{
 			for each(var block:Block in fallingBlocks)
 			{
-				block.moveTo(block.currentCell.clockwiseNeighbor.hexCoordinates);
+				if(!block.currentCell.clockwiseNeighbor.occupied)
+				{
+					block.moveTo(block.currentCell.clockwiseNeighbor.hexCoordinates);
+				}
 			}
 		}
 		
@@ -44,7 +47,10 @@ package fr.manashield.flex.thex {
 		{
 			for each(var block:Block in fallingBlocks)
 			{
-				block.moveTo(block.currentCell.counterClockwiseNeighbor.hexCoordinates);
+				if(!block.currentCell.counterClockwiseNeighbor.occupied)
+				{
+					block.moveTo(block.currentCell.counterClockwiseNeighbor.hexCoordinates);
+				}
 			}
 		}
 
@@ -68,7 +74,7 @@ package fr.manashield.flex.thex {
 
 		private function moveToCenter(block:Block):void
 		{
-			if(block.distanceToCenter <= 3*Math.cos(Math.PI/6)*block.currentCell.parent.gridSize)
+			if(block.currentCell.nearestNeighborToCenter.occupied)
 			{
 				fallingBlocks.splice(fallingBlocks.lastIndexOf(block), 1);
 				staticBlocks.push(block);

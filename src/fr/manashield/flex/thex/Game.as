@@ -27,11 +27,8 @@ package fr.manashield.flex.thex
 			_origin = _origin = HexagonalGrid.instance.hexToCartesian(new Point(0,0));
 			
 			// Central hexagon
-			var centralBlock:Block = new Block(HexagonalGrid.instance.cell(new Point(0,0)), new Color(0xCACACA));
-			trace(centralBlock); // Get rid of the annoying "not used" warning.
-			
-			// hex test
-			//var toto:Block = new Block(_gameGrid.cell(new Point(0,3)), Color.RANDOM);
+			var centralBlock:Block = new Block(HexagonalGrid.instance.cell(new Point(0,0)), new Color(0xCACAAA));
+			$(centralBlock); // Get rid of the annoying "not used" warning.
 			
 			BlockGenerator.instance.spawnBlock();
 			
@@ -42,5 +39,7 @@ package fr.manashield.flex.thex
 		{
 			return _stage;
 		}
+		
+		private function $(o:Object):void{}
 	}
 }

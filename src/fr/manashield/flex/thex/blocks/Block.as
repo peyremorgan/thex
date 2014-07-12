@@ -19,6 +19,8 @@ package fr.manashield.flex.thex.blocks
 			this._currentCell = startCell;
 			this._color = color;
 			this._symbol = new Hexagon(startCell.center, startCell.parent.gridSize, color.hexValue);
+			
+			startCell.occupied = true;
 			startCell.parent.stage.addChild(this._symbol);
 		}
 		
@@ -39,7 +41,9 @@ package fr.manashield.flex.thex.blocks
 		
 		public function moveTo(newHexCoordinates:Point):void
 		{
+			this._currentCell.occupied = false;
 			this._currentCell = this._currentCell.parent.cell(newHexCoordinates);
+			this.currentCell.occupied = true;
 			
 			var newCartesianCoordinates:Point = this._currentCell.parent.hexToCartesian(newHexCoordinates);
 			this._symbol.x = newCartesianCoordinates.x;

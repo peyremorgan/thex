@@ -10,11 +10,13 @@ package fr.manashield.flex.thex.blocks
 	{
 		protected var _hexCoordinates:Point;
 		protected var _parent:HexagonalGrid;
+		protected var _isOccupied:Boolean;
 		
-		public function HexagonalCell(position:Point, parent:HexagonalGrid = null)
+		public function HexagonalCell(position:Point, parent:HexagonalGrid = null, occupied:Boolean = false)
 		{
 			_hexCoordinates = position;
 			_parent = parent;
+			_isOccupied = occupied;
 		}
 		
 		public function get center():Point
@@ -115,6 +117,16 @@ package fr.manashield.flex.thex.blocks
 			}
 			
 			return this._parent.cell(new Point(x, y));
+		}
+		
+		public function get occupied():Boolean
+		{
+			return this._isOccupied;
+		}
+		
+		public function set occupied(newState:Boolean):void
+		{
+			this._isOccupied = newState;
 		}
 	}
 }
