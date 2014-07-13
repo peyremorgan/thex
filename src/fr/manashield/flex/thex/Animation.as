@@ -1,4 +1,5 @@
 package fr.manashield.flex.thex {
+	import fr.manashield.flex.thex.utils.Color;
 	import fr.manashield.flex.thex.blocks.Block;
 	import fr.manashield.flex.thex.events.BlockLandingEvent;
 	import fr.manashield.flex.thex.events.RotateBlockEvent;
@@ -14,6 +15,7 @@ package fr.manashield.flex.thex {
 	 */
 	public final class Animation extends EventDispatcher
 	{
+		public static const STATIC_BLOCK_ALPHA:Number = 0.77;
 
 		private static var _instance:Animation = new Animation();
 		private static var _stage:Stage;
@@ -59,9 +61,16 @@ package fr.manashield.flex.thex {
 			return _instance;
 		}
 
-		public function addBlock(newBlock:Block):void
+		public function addBlock(newBlock:Block, falling:Boolean = true):void
 		{
-			this.fallingBlocks.push(newBlock);
+			if(falling)
+			{
+				this.fallingBlocks.push(newBlock);
+			}
+			else
+			{
+				this.staticBlocks.push(newBlock);
+			}
 		}
 
 		private function moveBlocksToCenter(e : Event):void
@@ -78,7 +87,7 @@ package fr.manashield.flex.thex {
 			{
 				fallingBlocks.splice(fallingBlocks.lastIndexOf(block), 1);
 				staticBlocks.push(block);
-				block.symbol.alpha = 0.77;
+				block.symbol.alpha = STATIC_BLOCK_ALPHA;
 				this.dispatchEvent(new BlockLandingEvent(block));
 			}
 			else
@@ -92,5 +101,35 @@ package fr.manashield.flex.thex {
 			moveBlocksToCenter(null);
 		}
 		
+		
+		public function removeBlock(blockToRemove:Block):Block
+		{
+			if(staticBlocks.indexOf(blockToRemove) >= 0)
+			{
+				return staticBlocks.splice(staticBlocks.indexOf(blockToRemove), 1)[0];
+			}
+			
+			if(fallingBlocks.indexOf(blockToRemove) >= 0)
+			{
+				return fallingBlocks.splice(fallingBlocks.indexOf(blockToRemove), 1)[0];
+			}
+			
+			return null;
+		}
+		
+		public function activeColors(unique:Boolean = true):Vector.<Color>
+		{
+			var colors:Vector.<Color> = new Vector.<Color>();
+			
+			for each(var block:Block in staticBlocks)
+			{
+				if(!unique || colors.indexOf(block.color) < 0)
+				{
+					colors.push(block.color);
+				}
+			}
+			
+			return colors;
+		}
 	}
 }

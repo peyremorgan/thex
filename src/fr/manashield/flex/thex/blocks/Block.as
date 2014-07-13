@@ -1,4 +1,5 @@
 package fr.manashield.flex.thex.blocks {
+	import fr.manashield.flex.thex.Animation;
 	import fr.manashield.flex.thex.geometry.Hexagon;
 	import fr.manashield.flex.thex.utils.Color;
 
@@ -58,6 +59,8 @@ package fr.manashield.flex.thex.blocks {
 			this.currentCell.block = null;
 			
 			this.symbol.parent.removeChild(this.symbol);
+			
+			Animation.instance.removeBlock(this);
 		}
 		
 		public function destroyIf(color:Color, visitedBlocks:Vector.<Block> = null):void
