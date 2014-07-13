@@ -1,7 +1,6 @@
 package fr.manashield.flex.thex.blocks {
-	import flash.events.Event;
-	import fr.manashield.flex.thex.events.BlockLandingEvent;
 	import fr.manashield.flex.thex.Animation;
+	import fr.manashield.flex.thex.events.BlockLandingEvent;
 	import fr.manashield.flex.thex.utils.Color;
 
 	import flash.geom.Point;
@@ -43,7 +42,7 @@ package fr.manashield.flex.thex.blocks {
 			return newBlock;
 		}
 		
-		public function blockLanded(e:Event):void
+		public function blockLanded(e:BlockLandingEvent):void
 		{
 			this.spawnBlock();
 		}

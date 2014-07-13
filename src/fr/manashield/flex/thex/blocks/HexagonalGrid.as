@@ -1,5 +1,7 @@
-package fr.manashield.flex.thex.blocks
-{
+package fr.manashield.flex.thex.blocks {
+	import fr.manashield.flex.thex.geometry.Hexagon;
+	import fr.manashield.flex.thex.utils.Color;
+
 	import flash.display.Stage;
 	import flash.geom.Point;
 	/**
@@ -29,6 +31,22 @@ package fr.manashield.flex.thex.blocks
 			for(var v:int = -height/2; v < height/2; ++v)
 			{
 				_grid[[u, v]] = new HexagonalCell(new Point(u, v), this);
+			}
+			
+			for(var i:uint=1; i<6; ++i)
+			{
+				var currentColor:uint = Color.COLORS[i].hexValue;
+				var hex:Hexagon = new Hexagon(_grid[[0, i]].center, _grid[[0, i]].parent.gridSize, currentColor);
+				hex.alpha = 0.1;
+				_stage.addChild(hex);
+				
+				var nextCell:HexagonalCell = _grid[[0, i]];
+				while((nextCell = nextCell.clockwiseNeighbor) != _grid[[0, i]])
+				{
+					hex = new Hexagon(nextCell.center, _grid[[0, i]].parent.gridSize, currentColor);
+					hex.alpha = 0.1;
+					_stage.addChild(hex);
+				}
 			}
 			
 			HexagonalCell(_grid[[0,0]]).occupied = true;
