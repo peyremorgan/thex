@@ -78,7 +78,6 @@ package fr.manashield.flex.thex {
 			{
 				fallingBlocks.splice(fallingBlocks.lastIndexOf(block), 1);
 				staticBlocks.push(block);
-				//trace(block.symbol.alpha);
 				block.symbol.alpha = 0.77;
 				this.dispatchEvent(new BlockLandingEvent(block));
 			}

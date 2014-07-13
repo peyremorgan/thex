@@ -103,6 +103,9 @@ package fr.manashield.flex.thex.blocks {
 			return this._color;
 		}
 		
+		/*
+		 * counts the blocks of the same color from near to near
+		 */
 		public function sameColorNeighbors(visitedBlocks:Vector.<Block> = null):uint
 		{		
 			if(!visitedBlocks)
