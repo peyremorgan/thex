@@ -1,7 +1,9 @@
 package fr.manashield.flex.thex.blocks {
+	import fr.manashield.flex.thex.Animation;
 	import fr.manashield.flex.thex.geometry.Hexagon;
 	import fr.manashield.flex.thex.utils.Color;
 
+	import flash.events.Event;
 	import flash.geom.Point;
 	/**
 	 * @author Morgan Peyre (morgan@peyre.info)
@@ -12,16 +14,46 @@ package fr.manashield.flex.thex.blocks {
 		protected var _currentCell:HexagonalCell;
 		protected var _symbol:Hexagon;
 		protected var _color:Color;
+		protected var _frameNb:uint;
 
 		public function Block(startCell:HexagonalCell, color:Color):void
 		{
-			this._currentCell = startCell;
-			this._color = color;
-			this._symbol = new Hexagon(startCell.center, startCell.parent.gridSize, color.hexValue);
+			_currentCell = startCell;
+			_color = color;
+			_symbol = new Hexagon(startCell.center, startCell.parent.gridSize, color.hexValue);
 			
 			startCell.occupied = true;
 			startCell.block = this;
 			startCell.parent.stage.addChild(this._symbol);
+		}
+		
+		protected function zboing(e:Event):void
+		{
+			if(_frameNb < 5)
+			{
+				_symbol.scaleX+=0.06;
+				_symbol.scaleY+=0.06;
+			}
+			else if(_frameNb < 13)
+			{
+				_symbol.scaleX-=0.06;
+				_symbol.scaleY-=0.06;
+			}
+			else if(_frameNb < 17)
+			{
+				_symbol.scaleX+=0.06;
+				_symbol.scaleY+=0.06;
+			}
+			else if(_frameNb < 18)
+			{
+				_symbol.scaleX-=0.06;
+				_symbol.scaleY-=0.06;
+			}
+			else
+			{
+				_symbol.removeEventListener(Event.ENTER_FRAME, zboing);
+			}
+			++_frameNb;
 		}
 		
 		public function get symbol():Hexagon
@@ -41,23 +73,28 @@ package fr.manashield.flex.thex.blocks {
 		
 		public function moveTo(newHexCoordinates:Point):void
 		{
-			this._currentCell.occupied = false;
-			this._currentCell.block = null;
-			this._currentCell = this._currentCell.parent.cell(newHexCoordinates);
-			this._currentCell.occupied = true;
-			this._currentCell.block = this;
+			_currentCell.occupied = false;
+			_currentCell.block = null;
+			_currentCell = _currentCell.parent.cell(newHexCoordinates);
+			_currentCell.occupied = true;
+			_currentCell.block = this;
 			
-			var newCartesianCoordinates:Point = this._currentCell.parent.hexToCartesian(newHexCoordinates);
-			this._symbol.x = newCartesianCoordinates.x;
-			this._symbol.y = newCartesianCoordinates.y;
+			var newCartesianCoordinates:Point = _currentCell.parent.hexToCartesian(newHexCoordinates);
+			_symbol.x = newCartesianCoordinates.x;
+			_symbol.y = newCartesianCoordinates.y;
+			_frameNb = 0;
+			_symbol.scaleX = _symbol.scaleY = 1;
+			_symbol.addEventListener(Event.ENTER_FRAME, zboing);
 		}
 		
 		public function destroy():void
 		{			
-			this.currentCell.occupied = false;
-			this.currentCell.block = null;
+			_currentCell.occupied = false;
+			_currentCell.block = null;
 			
-			this.symbol.parent.removeChild(this.symbol);
+			_symbol.parent.removeChild(this.symbol);
+			
+			Animation.instance.removeBlock(this);
 		}
 		
 		public function destroyIf(color:Color, visitedBlocks:Vector.<Block> = null):void
@@ -69,7 +106,7 @@ package fr.manashield.flex.thex.blocks {
 			
 			visitedBlocks.push(this);
 			
-			if (this._color == color)
+			if (_color == color)
 			{
 				for each(var neighbor:Block in this.neighbors)
 				{

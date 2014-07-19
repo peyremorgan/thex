@@ -1,6 +1,5 @@
 package fr.manashield.flex.thex.blocks {
 	import fr.manashield.flex.thex.geometry.Hexagon;
-	import fr.manashield.flex.thex.utils.Color;
 
 	import flash.display.Stage;
 	import flash.geom.Point;
@@ -16,11 +15,10 @@ package fr.manashield.flex.thex.blocks {
 		protected var _stage:Stage;
 		protected var _gridSize:int;
 		
-		
 		/*
 		 *  create the singleton
 		 */
-		public static function init(stage:Stage, cellRadius:int, width:int = 25, height:int = 25):void
+		public static function init(stage:Stage, cellRadius:int, width:int = 100, height:int = 100):void
 		{
 			_instance = new HexagonalGrid(stage, cellRadius, width, height);
 		}
@@ -28,7 +26,7 @@ package fr.manashield.flex.thex.blocks {
 		/*
 		 * constructor
 		 */
-		public function HexagonalGrid(stage:Stage, cellRadius:int, width:int = 25, height:int = 25) : void
+		public function HexagonalGrid(stage:Stage, cellRadius:uint, width:uint = 100, height:uint = 100) : void
 		{			
 			_grid = new Object();
 			_stage = stage;
@@ -41,17 +39,15 @@ package fr.manashield.flex.thex.blocks {
 			}
 			
 			// add background grid
-			for(var i:uint=1; i<6; ++i)
+			var radius:uint = Math.min(width,height)/2;
+			for(var i:uint=1; i<radius; ++i)
 			{
-				var currentColor:uint = Color.COLORS[i].hexValue;
-				var hex:Hexagon = new Hexagon(_grid[[0, i]].center, _grid[[0, i]].parent.gridSize, currentColor);
-				hex.alpha = 0.1;
-				_stage.addChild(hex);
-				
+				var currentColor:uint = i%2?0xABABAB:0xEFE500;	
 				var nextCell:HexagonalCell = _grid[[0, i]];
-				while((nextCell = nextCell.clockwiseNeighbor) != _grid[[0, i]])
+				for(var j:uint=0; j<i*6; ++j)
 				{
-					hex = new Hexagon(nextCell.center, _grid[[0, i]].parent.gridSize, currentColor);
+					nextCell = nextCell.clockwiseNeighbor;
+					var hex:Hexagon = new Hexagon(nextCell.center, HexagonalCell(_grid[[0, i]]).parent.gridSize, (j+1)%i?currentColor:0x000000);
 					hex.alpha = 0.1;
 					_stage.addChild(hex);
 				}
@@ -62,7 +58,7 @@ package fr.manashield.flex.thex.blocks {
 		
 		/*
 		 * Hexagonal to Cartesian coordinates conversion (everyone knows that the cartesian doctrine is way better than the hexagonal. repent yourself sinners !)
-		 */ 
+		 */
 		public function hexToCartesian(point:Point) : Point
 		{
 			var x:int = diapothem()*point.x*Math.cos(Math.PI/6) + Number(_stage.stageWidth)/2;
@@ -112,7 +108,6 @@ package fr.manashield.flex.thex.blocks {
 		 */
 		public function cell(hexCoordinates:Point):HexagonalCell
 		{
-			if(hexCoordinates.x > 10) throw new Error("CACA !");
 			return this._grid[[hexCoordinates.x,hexCoordinates.y]];
 		}
 		
@@ -122,6 +117,20 @@ package fr.manashield.flex.thex.blocks {
 		public static function get instance():HexagonalGrid
 		{
 			return _instance;
+		}
+		
+		public function ring(radius:uint):Vector.<HexagonalCell>
+		{
+			var cells:Vector.<HexagonalCell> = new Vector.<HexagonalCell>();
+			
+			var currentCell:HexagonalCell = this.cell(new Point(0,radius));
+			for(var i:uint=0; i<6*radius; ++i)
+			{
+				cells.push(currentCell);
+				currentCell = currentCell.clockwiseNeighbor;
+			}
+			
+			return cells;
 		}
 	}
 }

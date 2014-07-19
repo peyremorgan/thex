@@ -2,13 +2,14 @@ package fr.manashield.flex.thex
 {
 	import fr.manashield.flex.thex.events.ForceFallEvent;
 	import fr.manashield.flex.thex.events.RotateBlockEvent;
-
 	import fr.manashield.flex.thex.userInterface.IngameUserInteraction;
 	import fr.manashield.flex.thex.userInterface.UserInteraction;
+	import fr.manashield.flex.thex.utils.EmbedFonts;
+
 	import flash.display.Sprite;
 	import flash.events.Event;
 
-	[SWF(width="1200",height="600",backgroundColor="#ffffff")]
+	[SWF(width="800",height="600",backgroundColor="#ffffff",frameRate="100")]
 	/**
 	 * @author Morgan Peyre (morgan@peyre.info)
 	 * @author Paul Bonnet
@@ -29,7 +30,9 @@ package fr.manashield.flex.thex
 		{		
 			// Entry point
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-
+			
+			EmbedFonts.init();
+			
 			new Game(stage);
 			
 			_currentUI = new IngameUserInteraction(stage);
