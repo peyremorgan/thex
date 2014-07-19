@@ -110,19 +110,20 @@ package fr.manashield.flex.thex.blocks
 			if(x*y > 0 || y == 0)
 			{
 				sign = (x>0?1:-1);
-				
+
 				x-=sign;
 				y+=sign;
-			} else
+			}
+			else
 			{
 				sign = (y>0?1:-1);
-				
+
 				Math.abs(x)>=Math.abs(y)?y-=sign:x-=sign;
 			}
-			
+
 			return this._parent.cell(new Point(x, y));
 		}
-		
+
 		public function get occupied():Boolean
 		{
 			return this._isOccupied;

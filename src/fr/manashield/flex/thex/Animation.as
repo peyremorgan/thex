@@ -15,8 +15,6 @@ package fr.manashield.flex.thex {
 	 */
 	public final class Animation extends EventDispatcher
 	{
-		public static const STATIC_BLOCK_ALPHA:Number = 0.77;
-
 		private static var _instance:Animation = new Animation();
 		private static var _stage:Stage;
 
@@ -87,7 +85,6 @@ package fr.manashield.flex.thex {
 			{
 				fallingBlocks.splice(fallingBlocks.lastIndexOf(block), 1);
 				staticBlocks.push(block);
-				block.symbol.alpha = STATIC_BLOCK_ALPHA;
 				this.dispatchEvent(new BlockLandingEvent(block));
 			}
 			else
