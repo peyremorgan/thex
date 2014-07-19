@@ -14,15 +14,25 @@ package fr.manashield.flex.thex.geometry {
 			sides:uint, 
 			origin:Point,
 			size:uint, 
-			color:uint = 0xFFFFFF, 
+			color:uint = 0xFFFFFF,
+			shape:String="emboss", 
 			rotation:Number=0)
 		{
-			this._size = size;
-			this._color = color;
-			var theta:Number;
+			_size = size;
+			_color = color;
 			var innerSize:uint = size*0.7;
+			var shadingRatio:Number = 0.3;
 			
-			this.graphics.lineStyle(2, 0x000000, 0.5);
+			var theta:Number;
+			
+			if(shape == "emboss")
+			{
+				//this.graphics.lineStyle(2, darkenColor(color, 0.9), 0.5);
+			}
+			else
+			{
+				this.graphics.lineStyle(2, 0x000000, 0.5);
+			}
 			
 			//outer polygon
 			this.graphics.moveTo(size * Math.cos(rotation), size * Math.sin(rotation));
@@ -38,82 +48,51 @@ package fr.manashield.flex.thex.geometry {
 			}
 			this.graphics.endFill();
 			
-			//inner polygon
-			var innerColorString:String = "";
-			
-			for(i=0; i<3; ++i)
+			if(shape == "emboss")
 			{
-				var tempString:String = (parseInt(color.toString(16).slice(0+2*i, 2+2*i), 16)*0.8).toString(16);
-				innerColorString = innerColorString.concat((tempString.length==1?"0":"")+tempString);
-			}
-			var innerColor:uint = parseInt(innerColorString, 16);
-			
-			this.graphics.moveTo(innerSize * Math.cos(rotation), innerSize * Math.sin(rotation));
-			this.graphics.beginFill(innerColor);
-
-			for (i=1; i<sides; ++i)
-			{
-				theta = i*2*Math.PI/sides + rotation;
-				this.graphics.lineTo(
-					innerSize * Math.cos(theta), 
-					innerSize * Math.sin(theta)
-				);
-			}
-			this.graphics.endFill();
-			
-			//sides
-			for (i=0; i<sides; ++i)
-			{
-				var sideColor:uint;
-				var sideColorString:String = "";
-				
-				if(i<uint(sides/2)-1)
+				//inner polygon
+				this.graphics.moveTo(innerSize * Math.cos(rotation), innerSize * Math.sin(rotation));
+				this.graphics.beginFill(darkenColor(color, 0.7));
+	
+				for (i=1; i<sides; ++i)
 				{
-					for(var j:uint=0; j<3; ++j)
-					{
-						tempString = (parseInt(color.toString(16).slice(0+2*j, 2+2*j), 16)*0.5).toString(16);
-						sideColorString = sideColorString.concat((tempString.length==1?"0":"")+tempString);
-					}
-					sideColor = parseInt(sideColorString, 16);
+					theta = i*2*Math.PI/sides + rotation;
+					this.graphics.lineTo(
+						innerSize * Math.cos(theta), 
+						innerSize * Math.sin(theta)
+					);
 				}
-				else if(i==uint(sides/2)-1 || i==sides-1)
-				{
-					for(j=0; j<3; ++j)
-					{
-						tempString = (parseInt(color.toString(16).slice(0+2*j, 2+2*j), 16)*0.7).toString(16);
-						sideColorString = sideColorString.concat((tempString.length==1?"0":"")+tempString);
-					}
-					sideColor = parseInt(sideColorString, 16);
-				}
-				else
-				{
-					sideColor = color;
-				}
-
-				this.graphics.beginFill(sideColor);
-				
-				theta = i*2*Math.PI/sides + rotation;
-				var thetaPlus:Number = (i+1)*2*Math.PI/sides + rotation;
-				
-				this.graphics.moveTo(
-					size * Math.cos(theta), 
-					size * Math.sin(theta)
-				);
-				this.graphics.lineTo(
-					innerSize * Math.cos(theta), 
-					innerSize * Math.sin(theta)
-				);
-				this.graphics.lineTo(
-					innerSize * Math.cos(thetaPlus), 
-					innerSize * Math.sin(thetaPlus)
-				);
-				this.graphics.lineTo(
-					size * Math.cos(thetaPlus), 
-					size * Math.sin(thetaPlus)
-				);
 				this.graphics.endFill();
+				
+				//sides
+				for (i=0; i<sides; ++i)
+				{
+					var sideColor:uint = darkenColor(color, shadingRatio*Math.min(i, sides-i));
+
+					this.graphics.beginFill(sideColor);
+					
+					theta = i*2*Math.PI/sides + rotation;
+					var thetaPlus:Number = (i+1)*2*Math.PI/sides + rotation;
+					
+					this.graphics.moveTo(
+						size * Math.cos(theta), 
+						size * Math.sin(theta)
+					);
+					this.graphics.lineTo(
+						innerSize * Math.cos(theta), 
+						innerSize * Math.sin(theta)
+					);
+					this.graphics.lineTo(
+						innerSize * Math.cos(thetaPlus), 
+						innerSize * Math.sin(thetaPlus)
+					);
+					this.graphics.lineTo(
+						size * Math.cos(thetaPlus), 
+						size * Math.sin(thetaPlus)
+					);
+					this.graphics.endFill();
+				}
 			}
-			
 			//object placement
 			this.x = origin.x;
 			this.y = origin.y;
@@ -122,6 +101,17 @@ package fr.manashield.flex.thex.geometry {
 		public function get size():uint
 		{
 			return _size;
+		}
+		
+		protected function darkenColor(color:uint, factor:Number):uint
+		{
+			var newColorString:String = "";
+			for(var i:uint=0; i<3; ++i)
+			{
+				var tempString:String = (parseInt(color.toString(16).slice(0+2*i, 2+2*i), 16)*factor).toString(16);
+				newColorString = newColorString.concat((tempString.length==1?"0":"")+tempString);
+			}
+			return parseInt(newColorString, 16);
 		}
 	}
 }

@@ -13,6 +13,7 @@ package fr.manashield.flex.thex.geometry
 		protected static const defaultOrigin : Point = new Point();
 		protected static const defaultSize : uint = 0;
 		protected static const defaultColor : uint = 0xFFFFFF;
+		protected static const defaultShape : String = "emboss";
 		protected static const defaultRotation : Number = 0;
 		
 		/* Parameters */
@@ -20,6 +21,7 @@ package fr.manashield.flex.thex.geometry
 		protected var _origin : Point;
 		protected var _size : uint;
 		protected var _color : uint;
+		protected var _shape : String;
 		protected var _rotation : Number;
 		
 		/* Constructor */
@@ -28,6 +30,7 @@ package fr.manashield.flex.thex.geometry
 			_origin = defaultOrigin;
 			_size = defaultSize;
 			_color = defaultColor;
+			_shape = defaultShape;
 			_rotation = defaultRotation;
 		}
 		
@@ -41,7 +44,7 @@ package fr.manashield.flex.thex.geometry
 		/* Build method */
 		public function build() : Polygon
 		{
-			return new Polygon(_sidesNumber, _origin, _size, _color, _rotation);
+			return new Polygon(_sidesNumber, _origin, _size, _color, _shape, _rotation);
 		}
 	}
 }

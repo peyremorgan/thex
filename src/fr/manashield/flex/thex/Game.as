@@ -90,6 +90,7 @@ package fr.manashield.flex.thex
 			}
 		}
 		
+		//useless function used to get rid of a warning
 		private function $(o:Object):void{}
 	}
 }

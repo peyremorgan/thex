@@ -47,7 +47,7 @@ package fr.manashield.flex.thex.blocks {
 				for(var j:uint=0; j<i*6; ++j)
 				{
 					nextCell = nextCell.clockwiseNeighbor;
-					var hex:Hexagon = new Hexagon(nextCell.center, HexagonalCell(_grid[[0, i]]).parent.gridSize, (j+1)%i?currentColor:0x000000);
+					var hex:Hexagon = new Hexagon(nextCell.center, HexagonalCell(_grid[[0, i]]).parent.gridSize, (j+1)%i?currentColor:0x000000, "flat");
 					hex.alpha = 0.1;
 					_stage.addChild(hex);
 				}

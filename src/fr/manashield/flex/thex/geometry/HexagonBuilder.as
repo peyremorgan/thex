@@ -8,7 +8,7 @@ package fr.manashield.flex.thex.geometry {
 	{
 		public override function build() : Polygon
 		{
-			return new Hexagon(_origin, _size, _color, _rotation);
+			return new Hexagon(_origin, _size, _color, _shape, _rotation);
 		}
 		
 		public override function set sidesNumber(newSidesNumber:uint):void

@@ -11,9 +11,10 @@ package fr.manashield.flex.thex.geometry
 			origin:Point,
 			size:uint,
 			color:uint = 0xFFFFFF,
+			shape:String="emboss",
 			rotation:Number=0)
 		{
-			super(6, origin, size, color, rotation);
+			super(6, origin, size, color, shape, rotation);
 		}
 	}
 }

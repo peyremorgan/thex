@@ -15,6 +15,7 @@ package fr.manashield.flex.thex.blocks {
 		protected var _symbol:Hexagon;
 		protected var _color:Color;
 		protected var _frameNb:uint;
+		protected var _frameNbDestroy:uint;
 
 		public function Block(startCell:HexagonalCell, color:Color):void
 		{
@@ -92,9 +93,26 @@ package fr.manashield.flex.thex.blocks {
 			_currentCell.occupied = false;
 			_currentCell.block = null;
 			
-			_symbol.parent.removeChild(this.symbol);
+			_frameNbDestroy = 0;
+			_symbol.addEventListener(Event.ENTER_FRAME, destroySymbol);
+			//_symbol.parent.removeChild(this.symbol);
 			
 			Animation.instance.removeBlock(this);
+		}
+		
+		protected function destroySymbol(event:Event):void
+		{
+			if(_frameNbDestroy < 5)
+			{
+				_symbol.scaleX += 0.06;
+				_symbol.scaleY += 0.06;
+			}
+			else
+			{
+				_symbol.removeEventListener(Event.ENTER_FRAME, destroySymbol);
+				_symbol.parent.removeChild(this.symbol);
+			}
+			++_frameNbDestroy;
 		}
 		
 		public function destroyIf(color:Color, visitedBlocks:Vector.<Block> = null):void
