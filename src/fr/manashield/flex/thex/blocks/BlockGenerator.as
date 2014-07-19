@@ -48,11 +48,6 @@ package fr.manashield.flex.thex.blocks {
 			var newBlock:Block = new Block(cell, blockColor);
 			Animation.instance.addBlock(newBlock, addToFallingList);
 			
-			if(!addToFallingList)
-			{
-				newBlock.symbol.alpha = Animation.STATIC_BLOCK_ALPHA;
-			}
-			
 			return newBlock;
 		}
 		
