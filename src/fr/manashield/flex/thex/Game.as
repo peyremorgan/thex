@@ -54,7 +54,7 @@ package fr.manashield.flex.thex
 			var centralBlock:Block = new Block(HexagonalGrid.instance.cell(new Point(0,0)), new Color(0x5c5c5c));
 			$(centralBlock); // Get rid of the annoying "not used" warning.
 			
-			// reate the initial blocks
+			// create the initial blocks
 			this.fillGrid();
 			
 			// initialze and launch the animation of the falling blocks
