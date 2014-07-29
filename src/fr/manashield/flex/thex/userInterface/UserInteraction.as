@@ -1,5 +1,8 @@
 package fr.manashield.flex.thex.userInterface 
 {
+	import fr.manashield.flex.thex.Animation;
+	import fr.manashield.flex.thex.events.ForceFallEvent;
+	import fr.manashield.flex.thex.events.RotateBlockEvent;
 	import fr.manashield.flex.thex.utils.Abstract;
 	import flash.display.Stage;
 	import flash.events.Event;
@@ -14,7 +17,8 @@ package fr.manashield.flex.thex.userInterface
 	 */
 	public class UserInteraction extends Abstract implements IEventDispatcher
 	{
-		public var localEventDispatcher:EventDispatcher;
+		public var _localEventDispatcher:EventDispatcher;
+		public var _stage:Stage;
 		
 		public function mousePressed(e:MouseEvent):void{}
 		public function mouseReleased(e:MouseEvent):void{}
@@ -22,45 +26,92 @@ package fr.manashield.flex.thex.userInterface
 		public function keyPressed(e:KeyboardEvent):void{}
 		public function keyReleased(e:KeyboardEvent):void{}
 		
-		public function UserInteraction(initializeEventListener:Boolean = false, stage:Stage = null)
+		public function UserInteraction(stage:Stage = null, eventDispatcher:EventDispatcher = null)
 		{
-			if(initializeEventListener)
-			{
-				this.localEventDispatcher = new EventDispatcher();
-			}
+			this._localEventDispatcher = eventDispatcher?eventDispatcher:new EventDispatcher();
+			_stage = stage;
 			
-			if(stage)
+			if(stage) addEventListeners(stage);
+		}
+		
+		protected var events:Object = [
+			[KeyboardEvent.KEY_DOWN, keyPressed],
+			[KeyboardEvent.KEY_UP, keyReleased],
+			[MouseEvent.MOUSE_DOWN, mousePressed],
+			[MouseEvent.MOUSE_UP, mouseReleased]
+		];
+		
+		protected function addEventListeners(stage:Stage):void
+		{
+			for each (var i:Object in events)
 			{
-				stage.addEventListener(KeyboardEvent.KEY_DOWN, this.keyPressed);
-				stage.addEventListener(KeyboardEvent.KEY_UP, this.keyReleased);
-				stage.addEventListener(MouseEvent.MOUSE_DOWN, this.mousePressed);
-				stage.addEventListener(MouseEvent.MOUSE_UP, this.mouseReleased);
+				stage.addEventListener(i[0], i[1]);
 			}
 		}
 		
+		protected function removeEventListeners(stage:Stage):void
+		{
+			for each (var i:Object in events)
+			{
+				stage.removeEventListener(i[0], i[1]);
+			}
+		}
+		
+		// Transitions
+		public function gameOver():UserInteraction
+		{
+			removeEventListeners(_stage);
+			
+			return new GameOverUserInteraction(_stage, _localEventDispatcher);
+		}
+		
+		public function newGame():void
+		{
+			
+		}
+		
+		public function menu():void
+		{
+			
+		}
+		
+		public function resume():void
+		{
+			
+		}
+		
+		// Event-related methods
 		public function addEventListener(type : String, listener : Function, useCapture : Boolean = false, priority : int = 0, useWeakReference : Boolean = false) : void
 		{
-			this.localEventDispatcher.addEventListener(type, listener, useCapture, priority, useWeakReference);
+			this._localEventDispatcher.addEventListener(type, listener, useCapture, priority, useWeakReference);
 		}
 		
 		public function dispatchEvent(event : Event) : Boolean 
 		{
-			return this.localEventDispatcher.dispatchEvent(event);
+			return this._localEventDispatcher.dispatchEvent(event);
 		}
 		
 		public function hasEventListener(type : String) : Boolean
 		{
-			return this.localEventDispatcher.hasEventListener(type);
+			return this._localEventDispatcher.hasEventListener(type);
 		}
 		
 		public function removeEventListener(type : String, listener : Function, useCapture : Boolean = false) : void 
 		{
-			this.localEventDispatcher.removeEventListener(type, listener, useCapture);
+			this._localEventDispatcher.removeEventListener(type, listener, useCapture);
 		}
 		
 		public function willTrigger(type : String) : Boolean 
 		{
-			return this.localEventDispatcher.willTrigger(type);
+			return this._localEventDispatcher.willTrigger(type);
+		}
+		
+		// Listeners registration
+		public function registerListeners():void
+		{
+			addEventListener(RotateBlockEvent.ROTATE_CW, Animation.instance.moveBlocksClockwise);
+			addEventListener(RotateBlockEvent.ROTATE_CCW, Animation.instance.moveBlocksCounterClockwise);
+			addEventListener(ForceFallEvent.FORCE_FALL, Animation.instance.forceFall);
 		}
 	}
 }

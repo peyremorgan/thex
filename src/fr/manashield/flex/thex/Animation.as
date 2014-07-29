@@ -1,4 +1,7 @@
-package fr.manashield.flex.thex {
+package fr.manashield.flex.thex
+{
+	import fr.manashield.flex.thex.events.ThexEventDispatcher;
+	import fr.manashield.flex.thex.events.GameOverEvent;
 	import fr.manashield.flex.thex.blocks.Block;
 	import fr.manashield.flex.thex.events.BlockLandingEvent;
 	import fr.manashield.flex.thex.events.RotateBlockEvent;
@@ -13,7 +16,7 @@ package fr.manashield.flex.thex {
 	 * @author Morgan Peyre (morgan@peyre.info)
 	 * @author Paul Bonnet
 	 */
-	public final class Animation extends EventDispatcher
+	public final class Animation extends EventDispatcher // TODO : move event-dispatching code to ThexEventDispatcher
 	{
 		private static var _instance:Animation = new Animation();
 		private static var _stage:Stage;
@@ -30,6 +33,11 @@ package fr.manashield.flex.thex {
 			// Listeners
 			_instance.fallTimer.addEventListener(TimerEvent.TIMER, _instance.moveBlocksToCenter);
 			_instance.fallTimer.start();
+		}
+		
+		public function gameOver():void
+		{
+			_instance.fallTimer.stop();
 		}
 		
 		public function moveBlocksClockwise(e : RotateBlockEvent):void
@@ -101,17 +109,21 @@ package fr.manashield.flex.thex {
 		
 		public function removeBlock(blockToRemove:Block):Block
 		{
+			var removedBlock:Block = null;
+			
 			if(staticBlocks.indexOf(blockToRemove) >= 0)
 			{
-				return staticBlocks.splice(staticBlocks.indexOf(blockToRemove), 1)[0];
+				removedBlock =  staticBlocks.splice(staticBlocks.indexOf(blockToRemove), 1)[0];
+				
+				if(staticBlocks.length <= 0) ThexEventDispatcher.instance.dispatchEvent(new GameOverEvent(GameOverEvent.GAME_WON));
 			}
 			
 			if(fallingBlocks.indexOf(blockToRemove) >= 0)
 			{
-				return fallingBlocks.splice(fallingBlocks.indexOf(blockToRemove), 1)[0];
+				removedBlock = fallingBlocks.splice(fallingBlocks.indexOf(blockToRemove), 1)[0];
 			}
 			
-			return null;
+			return removedBlock;
 		}
 		
 		public function activeColors(unique:Boolean = true):Vector.<Color>

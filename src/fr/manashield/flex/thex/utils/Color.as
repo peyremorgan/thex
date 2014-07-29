@@ -11,6 +11,7 @@ package fr.manashield.flex.thex.utils {
 		public static const YELLOW:Color = new Color(0xFFE031);
 		public static const MAGENTA:Color = new Color(0xDF00FF);
 		public static const ORANGE:Color = new Color(0xFF9030);
+		public static const WHITE:Color = new Color(0xFFFFFFF);
 		
 		public static const COLORS:Vector.<Color> = new <Color>[RED, GREEN, BLUE, YELLOW, MAGENTA, ORANGE];
 		

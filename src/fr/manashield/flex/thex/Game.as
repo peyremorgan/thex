@@ -36,23 +36,25 @@ package fr.manashield.flex.thex
 			_score = 0;
 			
 			_scoreField = new TextField();
+			_scoreField.name = "_scoreField";
 			// TODO : repositionner le texte en fonction du ratio d'aspect
-			_scoreField.autoSize = TextFieldAutoSize.LEFT;;
+			_scoreField.autoSize = TextFieldAutoSize.LEFT;
 			stage.addChild(_scoreField);
 
 			var format:TextFormat = new TextFormat();
-			format.size = 42;
-			format.font = "Orgasmo";
-			format.color = 0x1bbdcd;
+			format.size = 100;
+			format.font = "score";
+			format.color = 0x555555;
 			format.letterSpacing = 4;
 			_scoreField.defaultTextFormat = format;
 			_scoreField.embedFonts = true;
 			_scoreField.text = _score.toString();
 			
-			// Central hexagon
+			// central hexagon
 			var centralBlock:Block = new Block(HexagonalGrid.instance.cell(new Point(0,0)), new Color(0x5c5c5c));
 			$(centralBlock); // Get rid of the annoying "not used" warning.
 			
+			// reate the initial blocks
 			this.fillGrid();
 			
 			// initialze and launch the animation of the falling blocks

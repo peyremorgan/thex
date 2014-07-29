@@ -1,4 +1,6 @@
 package fr.manashield.flex.thex.blocks {
+	import fr.manashield.flex.thex.events.GameOverEvent;
+	import fr.manashield.flex.thex.events.ThexEventDispatcher;
 	import fr.manashield.flex.thex.Animation;
 	import fr.manashield.flex.thex.geometry.Hexagon;
 	import fr.manashield.flex.thex.utils.Color;
@@ -19,11 +21,20 @@ package fr.manashield.flex.thex.blocks {
 
 		public function Block(startCell:HexagonalCell, color:Color):void
 		{
+			if(!startCell.occupied)
+			{
+				startCell.occupied = true;
+			}
+			else
+			{
+				ThexEventDispatcher.instance.dispatchEvent(new GameOverEvent());
+				return;
+			}
+			
 			_currentCell = startCell;
 			_color = color;
 			_symbol = new Hexagon(startCell.center, startCell.parent.gridSize, color.hexValue);
 			
-			startCell.occupied = true;
 			startCell.block = this;
 			startCell.parent.stage.addChild(this._symbol);
 		}
@@ -95,7 +106,6 @@ package fr.manashield.flex.thex.blocks {
 			
 			_frameNbDestroy = 0;
 			_symbol.addEventListener(Event.ENTER_FRAME, destroySymbol);
-			//_symbol.parent.removeChild(this.symbol);
 			
 			Animation.instance.removeBlock(this);
 		}

@@ -1,7 +1,8 @@
 package fr.manashield.flex.thex 
 {
-	import fr.manashield.flex.thex.events.ForceFallEvent;
-	import fr.manashield.flex.thex.events.RotateBlockEvent;
+	import fr.manashield.flex.thex.events.GameOverEvent;
+	import fr.manashield.flex.thex.events.ThexEventDispatcher;
+	import fr.manashield.flex.thex.userInterface.GameOverPopup;
 	import fr.manashield.flex.thex.userInterface.IngameUserInteraction;
 	import fr.manashield.flex.thex.userInterface.UserInteraction;
 	import fr.manashield.flex.thex.utils.EmbedFonts;
@@ -9,7 +10,7 @@ package fr.manashield.flex.thex
 	import flash.display.Sprite;
 	import flash.events.Event;
 
-	[SWF(width="800",height="600",backgroundColor="#ffffff",frameRate="100")]
+	[SWF(width="800",height="800",backgroundColor="#ffffff",frameRate="100")]
 	/**
 	 * @author Morgan Peyre (morgan@peyre.info)
 	 * @author Paul Bonnet
@@ -21,25 +22,40 @@ package fr.manashield.flex.thex
 		public function Main() : void 
 		{
 			if (stage)
+			{
 				init();
+			}
 			else
+			{
 				addEventListener(Event.ADDED_TO_STAGE, init);
+			}
 		}
 
-		private function init(e : Event = null) : void 
+		private function init(e:Event=null) : void 
 		{		
-			// Entry point
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
 			EmbedFonts.init();
 			
 			new Game(stage);
+			ThexEventDispatcher.instance.addEventListener(GameOverEvent.GAME_LOST, gameOver);
+			ThexEventDispatcher.instance.addEventListener(GameOverEvent.GAME_WON, gameWon);
 			
 			_currentUI = new IngameUserInteraction(stage);
-			
-			_currentUI.addEventListener(RotateBlockEvent.ROTATE_CW, Animation.instance.moveBlocksClockwise);
-			_currentUI.addEventListener(RotateBlockEvent.ROTATE_CCW, Animation.instance.moveBlocksCounterClockwise);
-			_currentUI.addEventListener(ForceFallEvent.FORCE_FALL, Animation.instance.forceFall);
+			_currentUI.registerListeners();
+		}
+		
+		private function gameOver(e:Event=null) : void
+		{
+			Animation.instance.gameOver();
+			_currentUI = _currentUI.gameOver();
+			stage.addChild(new GameOverPopup(stage));
+		}
+		
+		private function gameWon(e:Event=null) : void
+		{
+			trace("You win ! motha focka");
+			Animation.instance.gameOver();
 		}
 	}
 }

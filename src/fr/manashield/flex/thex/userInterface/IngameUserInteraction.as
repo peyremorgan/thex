@@ -15,7 +15,7 @@ package fr.manashield.flex.thex.userInterface
 	{
 		public function IngameUserInteraction(stage:Stage):void
 		{
-			super(true, stage);
+			super(stage);
 		}
 		
 		public override function isAbstract():Boolean
@@ -28,15 +28,15 @@ package fr.manashield.flex.thex.userInterface
 			switch(e.keyCode)
 			{
 				case Keyboard.RIGHT:
-				this.localEventDispatcher.dispatchEvent(new RotateBlockEvent(RotateBlockEvent.ROTATE_CW));
+				this._localEventDispatcher.dispatchEvent(new RotateBlockEvent(RotateBlockEvent.ROTATE_CW));
 				break;
 				
 				case Keyboard.LEFT:
-				this.localEventDispatcher.dispatchEvent(new RotateBlockEvent(RotateBlockEvent.ROTATE_CCW));
+				this._localEventDispatcher.dispatchEvent(new RotateBlockEvent(RotateBlockEvent.ROTATE_CCW));
 				break;
 				
 				case Keyboard.DOWN:
-				this.localEventDispatcher.dispatchEvent(new ForceFallEvent());
+				this._localEventDispatcher.dispatchEvent(new ForceFallEvent());
 			}
 		}
 	}

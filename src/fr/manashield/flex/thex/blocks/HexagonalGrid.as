@@ -53,7 +53,7 @@ package fr.manashield.flex.thex.blocks {
 				}
 			}
 			
-			HexagonalCell(_grid[[0,0]]).occupied = true;
+			//HexagonalCell(_grid[[0,0]]).occupied = true;
 		}
 		
 		/*
@@ -104,7 +104,7 @@ package fr.manashield.flex.thex.blocks {
 		}
 		
 		/*
-		 * return the cell choosen. Even throw amazing Error sometimes.
+		 * return the choosen cell. Even throw amazing Errors sometimes.
 		 */
 		public function cell(hexCoordinates:Point):HexagonalCell
 		{

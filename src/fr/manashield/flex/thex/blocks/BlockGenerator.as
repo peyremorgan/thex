@@ -22,13 +22,13 @@ package fr.manashield.flex.thex.blocks {
 			return _instance?_instance:_instance=new BlockGenerator();
 		}
 		
-		public function spawnBlock(radius:uint = 7, index:int = undefined, addToFallingList:Boolean = true):Block
+		public function spawnBlock(radius:uint = 7, index:int = Infinity, addToFallingList:Boolean = true):Block
 		{
 			var cell:HexagonalCell = HexagonalGrid.instance.cell(new Point(0,radius));
 			
 			// Spawn at specified index if any, coerced to [0..6*radius-1]. Else, spawn at random index
 			// index = "angular" position on a given hexagonal ring
-			var spawnIndex:int = index != undefined ? (index<0 ? (6*radius)+index%(6*radius) : index%(6*radius)) : Math.random()*6*radius;
+			var spawnIndex:int = (index != Infinity ? (index<0 ? (6*radius)+index%(6*radius) : index%(6*radius)) : Math.random()*6*radius);
 			
 			for(var i:int=0; i<spawnIndex; ++i)
 			{
