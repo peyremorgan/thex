@@ -53,7 +53,7 @@ package fr.manashield.flex.thex
 			// central hexagon
 			new Block(HexagonalGrid.instance.cell(new Point(0,0)), new Color(0x5c5c5c));
 			
-			// reate the initial blocks
+			// create the initial blocks
 			this.fillGrid();
 			
 			// initialze and launch the animation of the falling blocks
