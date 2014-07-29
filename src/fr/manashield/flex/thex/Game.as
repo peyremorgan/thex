@@ -51,8 +51,7 @@ package fr.manashield.flex.thex
 			_scoreField.text = _score.toString();
 			
 			// central hexagon
-			var centralBlock:Block = new Block(HexagonalGrid.instance.cell(new Point(0,0)), new Color(0x5c5c5c));
-			$(centralBlock); // Get rid of the annoying "not used" warning.
+			new Block(HexagonalGrid.instance.cell(new Point(0,0)), new Color(0x5c5c5c));
 			
 			// reate the initial blocks
 			this.fillGrid();
@@ -91,8 +90,5 @@ package fr.manashield.flex.thex
 				}
 			}
 		}
-		
-		//useless function used to get rid of a warning
-		private function $(o:Object):void{}
 	}
 }
