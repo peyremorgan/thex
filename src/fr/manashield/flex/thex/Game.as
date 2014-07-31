@@ -3,14 +3,18 @@ package fr.manashield.flex.thex
 	import fr.manashield.flex.thex.blocks.Block;
 	import fr.manashield.flex.thex.blocks.BlockGenerator;
 	import fr.manashield.flex.thex.blocks.HexagonalGrid;
-	import fr.manashield.flex.thex.events.BlockLandingEvent;
+	import fr.manashield.flex.thex.events.GameOverEvent;
+	import fr.manashield.flex.thex.events.ThexEventDispatcher;
 	import fr.manashield.flex.thex.utils.Color;
-	
+
 	import flash.display.Stage;
+	import flash.events.Event;
+	import flash.events.TimerEvent;
 	import flash.geom.Point;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import flash.utils.Timer;
 	
 	/**
 	 * @author Morgan Peyre (morgan@peyre.info)
@@ -20,10 +24,12 @@ package fr.manashield.flex.thex
 	{
 		private static const CELL_RADIUS:uint = 25;
 		
+		protected var _ingame:Boolean;
 		protected var _stage:Stage;
 		protected var _origin:Point;
 		protected var _score:uint;
 		protected var _scoreField:TextField;
+		protected var _clockTimer:Timer = new Timer(1000, 0);
 		
 		public function Game(stage:Stage):void
 		{
@@ -33,11 +39,8 @@ package fr.manashield.flex.thex
 			_origin = _origin = HexagonalGrid.instance.hexToCartesian(new Point(0,0));
 			
 			// Score field
-			_score = 0;
-			
 			_scoreField = new TextField();
 			_scoreField.name = "_scoreField";
-			// TODO : repositionner le texte en fonction du ratio d'aspect
 			_scoreField.autoSize = TextFieldAutoSize.LEFT;
 			stage.addChild(_scoreField);
 
@@ -48,20 +51,28 @@ package fr.manashield.flex.thex
 			format.letterSpacing = 4;
 			_scoreField.defaultTextFormat = format;
 			_scoreField.embedFonts = true;
-			_scoreField.text = _score.toString();
 			
 			// central hexagon
 			new Block(HexagonalGrid.instance.cell(new Point(0,0)), new Color(0x5c5c5c));
 			
-			// create the initial blocks
-			this.fillGrid();
-			
 			// initialze and launch the animation of the falling blocks
 			Animation.initialize(this);
-			Animation.instance.addEventListener(BlockLandingEvent.LANDING, this.blockLanded);
 			
-			// create first falling block
-			BlockGenerator.instance.spawnBlock();
+			this.newGame();
+			
+			// Initialize timer
+			this._clockTimer.addEventListener(TimerEvent.TIMER, this.countDown);
+			
+		}
+		
+		public function get ingame():Boolean
+		{
+			return _ingame;
+		}
+		
+		public function get timer():Timer
+		{
+			return this._clockTimer;
 		}
 		
 		public function get stage():Stage	
@@ -69,14 +80,14 @@ package fr.manashield.flex.thex
 			return _stage;
 		}
 		
-		public function blockLanded(e:BlockLandingEvent):void
+		private function countDown(e:Event):void
 		{
-			if(e.block.sameColorNeighbors() >= 3)
+			--_score;
+			_scoreField.text = _score.toString();
+			
+			if (_score == 0)
 			{
-				_score += e.block.sameColorNeighbors() - 2;
-				_scoreField.text = _score.toString();
-
-				e.block.destroyIf(e.block.color);
+				ThexEventDispatcher.instance.dispatchEvent(new GameOverEvent(GameOverEvent.GAME_LOST));
 			}
 		}
 		
@@ -89,6 +100,54 @@ package fr.manashield.flex.thex
 					BlockGenerator.instance.spawnBlock(i, j, false);
 				}
 			}
+		}
+		
+		public function gameOver():void
+		{
+			this._ingame = false;
+			this.timer.stop();
+		}
+		
+		public function newGame():void
+		{
+			// Reset score
+			_score = 20;
+			_scoreField.text = _score.toString();
+			
+			// Cleanup game board
+			Animation.instance.reset();
+			
+			// Enable game rules
+			this._ingame = true;
+			
+			// Generate map
+			this.fillGrid(1);
+			
+			// create first falling block
+			BlockGenerator.instance.spawnBlock();
+			
+			// Start timer
+			this.timer.start();
+		}
+		
+		public function get score():uint
+		{
+			return _score;
+		}
+		
+		public function set score(score:uint):void
+		{
+			_score = score;
+		}
+		
+		public function get scoreField():TextField
+		{
+			return _scoreField;
+		}
+		
+		public function set scoreField(scoreField:TextField):void
+		{
+			_scoreField = scoreField;
 		}
 	}
 }

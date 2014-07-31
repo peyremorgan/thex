@@ -65,19 +65,19 @@ package fr.manashield.flex.thex.userInterface
 			return new GameOverUserInteraction(_stage, _localEventDispatcher);
 		}
 		
-		public function newGame():void
+		public function newGame():UserInteraction
 		{
-			
+			return new IngameUserInteraction(_stage, _localEventDispatcher);
 		}
 		
-		public function menu():void
+		public function menu():UserInteraction
 		{
-			
+			return null; // FIXME : implement me
 		}
 		
-		public function resume():void
+		public function resume():UserInteraction
 		{
-			
+			return null; // FIXME : implement me
 		}
 		
 		// Event-related methods
@@ -109,8 +109,8 @@ package fr.manashield.flex.thex.userInterface
 		// Listeners registration
 		public function registerListeners():void
 		{
-			addEventListener(RotateBlockEvent.ROTATE_CW, Animation.instance.moveBlocksClockwise);
-			addEventListener(RotateBlockEvent.ROTATE_CCW, Animation.instance.moveBlocksCounterClockwise);
+			addEventListener(RotateBlockEvent.ROTATE_CW, Animation.instance.moveBlockClockwise);
+			addEventListener(RotateBlockEvent.ROTATE_CCW, Animation.instance.moveBlockCounterClockwise);
 			addEventListener(ForceFallEvent.FORCE_FALL, Animation.instance.forceFall);
 		}
 	}

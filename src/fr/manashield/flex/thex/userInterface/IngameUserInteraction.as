@@ -1,5 +1,6 @@
 package fr.manashield.flex.thex.userInterface 
 {
+	import flash.events.EventDispatcher;
 	import fr.manashield.flex.thex.events.ForceFallEvent;
 	import fr.manashield.flex.thex.events.RotateBlockEvent;
 
@@ -13,9 +14,9 @@ package fr.manashield.flex.thex.userInterface
 	 */
 	public class IngameUserInteraction extends UserInteraction 
 	{
-		public function IngameUserInteraction(stage:Stage):void
+		public function IngameUserInteraction(stage:Stage, eventDispatcher:EventDispatcher = null):void
 		{
-			super(stage);
+			super(stage, eventDispatcher);
 		}
 		
 		public override function isAbstract():Boolean

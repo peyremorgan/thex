@@ -1,66 +1,85 @@
-package fr.manashield.flex.thex
-{
-	import fr.manashield.flex.thex.events.ThexEventDispatcher;
-	import fr.manashield.flex.thex.events.GameOverEvent;
+package fr.manashield.flex.thex {
+	import flash.errors.IllegalOperationError;
 	import fr.manashield.flex.thex.blocks.Block;
-	import fr.manashield.flex.thex.events.BlockLandingEvent;
+	import fr.manashield.flex.thex.blocks.BlockGenerator;
+	import fr.manashield.flex.thex.events.GameOverEvent;
 	import fr.manashield.flex.thex.events.RotateBlockEvent;
+	import fr.manashield.flex.thex.events.ThexEventDispatcher;
 	import fr.manashield.flex.thex.utils.Color;
 
-	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
-	import flash.utils.Timer;
 	/**
 	 * @author Morgan Peyre (morgan@peyre.info)
 	 * @author Paul Bonnet
 	 */
 	public final class Animation extends EventDispatcher // TODO : move event-dispatching code to ThexEventDispatcher
 	{
-		private static var _instance:Animation = new Animation();
-		private static var _stage:Stage;
-
-		private var fallingBlocks:Vector.<Block> = new Vector.<Block>();
+		private static var _instance:Animation;
+		
+		private var _game:Game;
+		private var fallingBlock:Block;
 		private var staticBlocks:Vector.<Block> = new Vector.<Block>();
-		private var fallTimer:Timer = new Timer(1000, 0);
 		protected var _frameNb:uint;
 
 		public static function initialize(game:Game):void
 		{
-			_stage = game.stage;
+			//_stage = game.stage;
+			_instance = new Animation(game);
 			
 			// Listeners
-			_instance.fallTimer.addEventListener(TimerEvent.TIMER, _instance.moveBlocksToCenter);
-			_instance.fallTimer.start();
+			game.timer.addEventListener(TimerEvent.TIMER, _instance.moveBlockToCenter);
 		}
 		
-		public function gameOver():void
+		public function Animation(game:Game):void
 		{
-			_instance.fallTimer.stop();
-		}
-		
-		public function moveBlocksClockwise(e : RotateBlockEvent):void
-		{
-			for each(var block:Block in fallingBlocks)
+			if(_instance == null)
 			{
-				if(!block.currentCell.clockwiseNeighbor.occupied)
-				{
-					block.moveTo(block.currentCell.clockwiseNeighbor.hexCoordinates);
-				}
+				_game = game;
+			}
+			else
+			{
+				throw new IllegalOperationError();
 			}
 		}
 		
-		public function moveBlocksCounterClockwise(e : RotateBlockEvent):void
+		public function blockLanded(block:Block):void
 		{
-			for each(var block:Block in fallingBlocks)
+			if(block.sameColorNeighbors() >= 3)
 			{
-				if(!block.currentCell.counterClockwiseNeighbor.occupied)
+				if(block.sameColorNeighbors() == 4)
 				{
-					block.moveTo(block.currentCell.counterClockwiseNeighbor.hexCoordinates);
+					++_game.score;
 				}
+				else if(block.sameColorNeighbors() > 4)
+				{
+					_game.score += 2;
+				}
+				_game.scoreField.text = _game.score.toString();
+
+				block.destroyIf(block.color);
+			}
+			
+			BlockGenerator.instance.spawnBlock();
+		}
+
+		public function moveBlockClockwise(e : RotateBlockEvent):void
+		{
+			if(!fallingBlock.currentCell.clockwiseNeighbor.occupied)
+			{
+				fallingBlock.moveTo(fallingBlock.currentCell.clockwiseNeighbor.hexCoordinates);
 			}
 		}
+		
+		public function moveBlockCounterClockwise(e : RotateBlockEvent):void
+		{
+			if(!fallingBlock.currentCell.counterClockwiseNeighbor.occupied)
+			{
+				fallingBlock.moveTo(fallingBlock.currentCell.counterClockwiseNeighbor.hexCoordinates);
+			}
+		}
+		
 		
 		public static function get instance():Animation
 		{
@@ -71,41 +90,47 @@ package fr.manashield.flex.thex
 		{
 			if(falling)
 			{
-				this.fallingBlocks.push(newBlock);
+				fallingBlock = newBlock;
 			}
 			else
 			{
 				this.staticBlocks.push(newBlock);
 			}
 		}
-
-		private function moveBlocksToCenter(e : Event):void
+		
+		private function moveBlockToCenter(e:Event):void
 		{
-			for each(var block:Block in fallingBlocks)
+			if(fallingBlock.currentCell.nearestNeighborToCenter.occupied)
 			{
-				moveToCenter(block);
-			}
-		}
-
-		private function moveToCenter(block:Block):void
-		{
-			if(block.currentCell.nearestNeighborToCenter.occupied)
-			{
-				fallingBlocks.splice(fallingBlocks.lastIndexOf(block), 1);
-				staticBlocks.push(block);
-				this.dispatchEvent(new BlockLandingEvent(block));
+				staticBlocks.push(fallingBlock);
+				blockLanded(fallingBlock);
 			}
 			else
 			{
-				block.moveTo(block.currentCell.nearestNeighborToCenter.hexCoordinates);
+				fallingBlock.moveTo(fallingBlock.currentCell.nearestNeighborToCenter.hexCoordinates);
 			}
 		}
 		
 		public function forceFall(e:Event):void
 		{
-			moveBlocksToCenter(null);
+			moveBlockToCenter(null);
 		}
 		
+		public function reset():void
+		{
+			// Carefull: the destroy method modifies the staticBlocks array
+			var length:uint = staticBlocks.length;
+			for (var i:uint=0; i<length; ++i)
+			{
+				staticBlocks[0].destroy();
+			}
+			
+			if(fallingBlock)
+			{
+				fallingBlock.destroy();
+				fallingBlock = null;
+			}
+		}
 		
 		public function removeBlock(blockToRemove:Block):Block
 		{
@@ -115,16 +140,22 @@ package fr.manashield.flex.thex
 			{
 				removedBlock =  staticBlocks.splice(staticBlocks.indexOf(blockToRemove), 1)[0];
 				
-				if(staticBlocks.length <= 0) ThexEventDispatcher.instance.dispatchEvent(new GameOverEvent(GameOverEvent.GAME_WON));
+				if(staticBlocks.length <= 0 && this._game.ingame)
+				{
+					ThexEventDispatcher.instance.dispatchEvent(new GameOverEvent(GameOverEvent.GAME_WON));
+				}
 			}
-			
-			if(fallingBlocks.indexOf(blockToRemove) >= 0)
+
+			if(fallingBlock == blockToRemove)
 			{
-				removedBlock = fallingBlocks.splice(fallingBlocks.indexOf(blockToRemove), 1)[0];
+				removedBlock = fallingBlock;
+				fallingBlock = null;
 			}
 			
 			return removedBlock;
 		}
+		
+		
 		
 		public function activeColors(unique:Boolean = true):Vector.<Color>
 		{

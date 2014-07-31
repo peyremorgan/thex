@@ -1,6 +1,8 @@
 package fr.manashield.flex.thex.blocks {
 	import fr.manashield.flex.thex.Animation;
-	import fr.manashield.flex.thex.events.BlockLandingEvent;
+	import fr.manashield.flex.thex.events.GameOverEvent;
+	import fr.manashield.flex.thex.events.ThexEventDispatcher;
+	import fr.manashield.flex.thex.utils.CellAlreadyOccupiedError;
 	import fr.manashield.flex.thex.utils.Color;
 
 	import flash.geom.Point;
@@ -11,11 +13,6 @@ package fr.manashield.flex.thex.blocks {
 	public class BlockGenerator
 	{
 		public static var _instance:BlockGenerator;
-		
-		/*static*/
-		{
-			Animation.instance.addEventListener(BlockLandingEvent.LANDING, BlockGenerator.instance.blockLanded);
-		}
 		
 		public static function get instance():BlockGenerator
 		{
@@ -38,22 +35,31 @@ package fr.manashield.flex.thex.blocks {
 			var blockColor:Color;
 			if(addToFallingList)
 			{
-				blockColor = Animation.instance.activeColors()[uint(Math.random()*Animation.instance.activeColors().length)];
+				if(Animation.instance.activeColors().length != 0)
+				{
+					blockColor = Animation.instance.activeColors()[uint(Math.random()*Animation.instance.activeColors().length)];
+				}
+				else
+				{
+					return null;
+				}
 			}
 			else
 			{
 				blockColor = Color.RANDOM;
 			}
 			
-			var newBlock:Block = new Block(cell, blockColor);
-			Animation.instance.addBlock(newBlock, addToFallingList);
+			try
+			{
+				var newBlock:Block = new Block(cell, blockColor);
+				Animation.instance.addBlock(newBlock, addToFallingList);
+			}
+			catch(error:CellAlreadyOccupiedError)
+			{
+				ThexEventDispatcher.instance.dispatchEvent(new GameOverEvent());
+			}
 			
 			return newBlock;
-		}
-		
-		public function blockLanded(e:BlockLandingEvent):void
-		{
-			this.spawnBlock();
 		}
 	}
 }

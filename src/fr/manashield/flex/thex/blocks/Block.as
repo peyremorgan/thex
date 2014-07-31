@@ -1,8 +1,7 @@
 package fr.manashield.flex.thex.blocks {
-	import fr.manashield.flex.thex.events.GameOverEvent;
-	import fr.manashield.flex.thex.events.ThexEventDispatcher;
 	import fr.manashield.flex.thex.Animation;
 	import fr.manashield.flex.thex.geometry.Hexagon;
+	import fr.manashield.flex.thex.utils.CellAlreadyOccupiedError;
 	import fr.manashield.flex.thex.utils.Color;
 
 	import flash.events.Event;
@@ -27,8 +26,7 @@ package fr.manashield.flex.thex.blocks {
 			}
 			else
 			{
-				ThexEventDispatcher.instance.dispatchEvent(new GameOverEvent());
-				return;
+				throw new CellAlreadyOccupiedError("Target cell is occupied");
 			}
 			
 			_currentCell = startCell;
@@ -100,10 +98,10 @@ package fr.manashield.flex.thex.blocks {
 		}
 		
 		public function destroy():void
-		{			
+		{
 			_currentCell.occupied = false;
 			_currentCell.block = null;
-			
+
 			_frameNbDestroy = 0;
 			_symbol.addEventListener(Event.ENTER_FRAME, destroySymbol);
 			
