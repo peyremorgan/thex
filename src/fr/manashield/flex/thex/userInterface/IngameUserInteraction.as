@@ -1,10 +1,12 @@
 package fr.manashield.flex.thex.userInterface 
 {
-	import flash.events.EventDispatcher;
+	import fr.manashield.flex.thex.events.ThexEventDispatcher;
 	import fr.manashield.flex.thex.events.ForceFallEvent;
+	import fr.manashield.flex.thex.events.PauseEvent;
 	import fr.manashield.flex.thex.events.RotateBlockEvent;
 
 	import flash.display.Stage;
+	import flash.events.EventDispatcher;
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
 
@@ -38,7 +40,19 @@ package fr.manashield.flex.thex.userInterface
 				
 				case Keyboard.DOWN:
 				this._localEventDispatcher.dispatchEvent(new ForceFallEvent());
+				break;
+				
+				case Keyboard.ESCAPE:
+				ThexEventDispatcher.instance.dispatchEvent(new PauseEvent());
+				break;
 			}
+		}
+		
+		public override function pause():UserInteraction
+		{
+			removeEventListeners(_stage);
+			
+			return new GamePausedUserInteraction(_stage, _localEventDispatcher);
 		}
 	}
 }

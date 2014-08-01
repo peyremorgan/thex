@@ -1,9 +1,9 @@
-package fr.manashield.flex.thex.userInterface 
-{
+package fr.manashield.flex.thex.userInterface {
 	import fr.manashield.flex.thex.Animation;
 	import fr.manashield.flex.thex.events.ForceFallEvent;
 	import fr.manashield.flex.thex.events.RotateBlockEvent;
 	import fr.manashield.flex.thex.utils.Abstract;
+
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -28,7 +28,7 @@ package fr.manashield.flex.thex.userInterface
 		
 		public function UserInteraction(stage:Stage = null, eventDispatcher:EventDispatcher = null)
 		{
-			this._localEventDispatcher = eventDispatcher?eventDispatcher:new EventDispatcher();
+			_localEventDispatcher = eventDispatcher?eventDispatcher:new EventDispatcher();
 			_stage = stage;
 			
 			if(stage) addEventListeners(stage);
@@ -67,17 +67,19 @@ package fr.manashield.flex.thex.userInterface
 		
 		public function newGame():UserInteraction
 		{
+			removeEventListeners(_stage);
+			
 			return new IngameUserInteraction(_stage, _localEventDispatcher);
 		}
 		
-		public function menu():UserInteraction
+		public function pause():UserInteraction
 		{
-			return null; // FIXME : implement me
+			return this;
 		}
 		
 		public function resume():UserInteraction
 		{
-			return null; // FIXME : implement me
+			return this;
 		}
 		
 		// Event-related methods
@@ -86,7 +88,7 @@ package fr.manashield.flex.thex.userInterface
 			this._localEventDispatcher.addEventListener(type, listener, useCapture, priority, useWeakReference);
 		}
 		
-		public function dispatchEvent(event : Event) : Boolean 
+		public function dispatchEvent(event : Event) : Boolean
 		{
 			return this._localEventDispatcher.dispatchEvent(event);
 		}

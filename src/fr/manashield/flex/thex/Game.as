@@ -149,5 +149,15 @@ package fr.manashield.flex.thex
 		{
 			_scoreField = scoreField;
 		}
+		
+		public function pause():void
+		{
+			this.timer.stop(); //FIXME : will reset the timer at 1s of the next tick -> infinite playtime by pausing every <1s 
+		}
+		
+		public function resume():void
+		{
+			this.timer.start();
+		}
 	}
 }
