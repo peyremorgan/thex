@@ -23,13 +23,15 @@ package fr.manashield.flex.thex
 	public class Game
 	{
 		private static const CELL_RADIUS:uint = 25;
+		private static const TICK_PERIOD:uint = 1000;
+		public static const TIMER_PERIOD:uint = 100;
 		
 		protected var _ingame:Boolean;
 		protected var _stage:Stage;
 		protected var _origin:Point;
 		protected var _score:uint;
 		protected var _scoreField:TextField;
-		protected var _clockTimer:Timer = new Timer(1000, 0);
+		protected var _clockTimer:Timer = new Timer(TIMER_PERIOD, TICK_PERIOD/TIMER_PERIOD);
 		
 		public function Game(stage:Stage):void
 		{
@@ -61,8 +63,14 @@ package fr.manashield.flex.thex
 			this.newGame();
 			
 			// Initialize timer
-			this._clockTimer.addEventListener(TimerEvent.TIMER, this.countDown);
+			this._clockTimer.addEventListener(TimerEvent.TIMER_COMPLETE, this.tick);
 			
+		}
+		
+		protected function tick(e:Event):void
+		{
+			countDown();
+			rearmTimer();
 		}
 		
 		public function get ingame():Boolean
@@ -80,12 +88,12 @@ package fr.manashield.flex.thex
 			return _stage;
 		}
 		
-		private function countDown(e:Event):void
+		private function countDown(e:Event = null):void
 		{
 			--_score;
 			_scoreField.text = _score.toString();
 			
-			if (_score == 0)
+			if (!_score)
 			{
 				ThexEventDispatcher.instance.dispatchEvent(new GameOverEvent(GameOverEvent.GAME_LOST));
 			}
@@ -152,12 +160,18 @@ package fr.manashield.flex.thex
 		
 		public function pause():void
 		{
-			this.timer.stop(); //FIXME : will reset the timer at 1s of the next tick -> infinite playtime by pausing every <1s 
+			this.timer.stop();
 		}
 		
 		public function resume():void
 		{
 			this.timer.start();
+		}
+		
+		public function rearmTimer():void
+		{
+			this.timer.reset();
+			if(_ingame) this.timer.start();
 		}
 	}
 }

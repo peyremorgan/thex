@@ -56,7 +56,7 @@ package fr.manashield.flex.thex.blocks {
 			}
 			catch(error:CellAlreadyOccupiedError)
 			{
-				ThexEventDispatcher.instance.dispatchEvent(new GameOverEvent());
+				ThexEventDispatcher.instance.dispatchEvent(new GameOverEvent(GameOverEvent.GAME_LOST));
 			}
 			
 			return newBlock;

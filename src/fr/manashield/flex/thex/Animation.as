@@ -1,20 +1,21 @@
 package fr.manashield.flex.thex {
-	import flash.errors.IllegalOperationError;
 	import fr.manashield.flex.thex.blocks.Block;
 	import fr.manashield.flex.thex.blocks.BlockGenerator;
 	import fr.manashield.flex.thex.events.GameOverEvent;
 	import fr.manashield.flex.thex.events.RotateBlockEvent;
 	import fr.manashield.flex.thex.events.ThexEventDispatcher;
+	import fr.manashield.flex.thex.geometry.Sparkle;
 	import fr.manashield.flex.thex.utils.Color;
 
+	import flash.errors.IllegalOperationError;
 	import flash.events.Event;
-	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
+	import flash.geom.Point;
 	/**
 	 * @author Morgan Peyre (morgan@peyre.info)
 	 * @author Paul Bonnet
 	 */
-	public final class Animation extends EventDispatcher // TODO : move event-dispatching code to ThexEventDispatcher
+	public final class Animation
 	{
 		private static var _instance:Animation;
 		
@@ -22,6 +23,9 @@ package fr.manashield.flex.thex {
 		private var fallingBlock:Block;
 		private var staticBlocks:Vector.<Block> = new Vector.<Block>();
 		protected var _frameNb:uint;
+		
+		//
+		//private var sparkleTimer:Timer = new Timer(2000, 0);
 
 		public static function initialize(game:Game):void
 		{
@@ -29,7 +33,26 @@ package fr.manashield.flex.thex {
 			_instance = new Animation(game);
 			
 			// Listeners
-			game.timer.addEventListener(TimerEvent.TIMER, _instance.moveBlockToCenter);
+			game.timer.addEventListener(TimerEvent.TIMER_COMPLETE, _instance.moveBlockToCenter);
+		
+			//
+			game.timer.addEventListener(TimerEvent.TIMER, _instance.sparkle);
+		
+		}
+		
+		//
+		private function sparkle(e:Event=null):void {
+			var sparklesPos:Vector.<Point> = new Vector.<Point>();
+			sparklesPos.push(new Point(10, 5));
+			sparklesPos.push(new Point(-15, 20));
+			sparklesPos.push(new Point(0, -15));
+		
+			for each(var block:Block in staticBlocks) {
+				if(Math.floor(Math.random()*Game.TIMER_PERIOD*10))
+					continue;
+
+				block.symbol.stage.addChild(new Sparkle(block.symbol.localToGlobal(sparklesPos[Math.floor(Math.random()*sparklesPos.length)])));
+			}
 		}
 		
 		public function Animation(game:Game):void

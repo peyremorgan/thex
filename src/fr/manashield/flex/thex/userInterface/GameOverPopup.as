@@ -28,7 +28,7 @@ package fr.manashield.flex.thex.userInterface {
 			super(stage);
 			
 			_title = new TextField();
-			_title.defaultTextFormat = new TextFormat("gameOver", 100, 0xFFFFFF);
+			_title.defaultTextFormat = new TextFormat("gameOver", 80, 0xFFFFFF);
 			_title.embedFonts = true;
 			_title.text = titleMessage();
 			_title.autoSize = TextFieldAutoSize.LEFT;

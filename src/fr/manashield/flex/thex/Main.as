@@ -14,7 +14,7 @@ package fr.manashield.flex.thex
 	import flash.display.Sprite;
 	import flash.events.Event;
 
-	[SWF(width="800",height="800",backgroundColor="#ffffff",frameRate="100")]
+	[SWF(width="900",height="900",backgroundColor="#ffffff",frameRate="100")]
 	/**
 	 * @author Morgan Peyre (morgan@peyre.info)
 	 * @author Paul Bonnet
@@ -53,13 +53,13 @@ package fr.manashield.flex.thex
 			_currentUI.registerListeners();
 		}
 		
-		private function resume(e:Event) : void
+		private function resume(e:Event = null) : void
 		{
 			_currentUI = _currentUI.resume();
 			_currentGame.resume();
 		}
 		
-		private function pause(e:Event) : void
+		private function pause(e:Event = null) : void
 		{
 			_currentUI = _currentUI.pause();
 			_currentGame.pause();
@@ -67,7 +67,7 @@ package fr.manashield.flex.thex
 			stage.addChild(new PausePopup(stage));
 		}
 		
-		private function gameOver(e:Event) : void
+		private function gameOver(e:Event = null) : void
 		{			
 			_currentUI = _currentUI.gameOver();
 			_currentGame.gameOver();
@@ -75,7 +75,7 @@ package fr.manashield.flex.thex
 			stage.addChild(new GameOverPopup(stage));
 		}
 		
-		private function gameWon(e:Event) : void
+		private function gameWon(e:Event = null) : void
 		{
 			_currentUI = _currentUI.gameOver();
 			_currentGame.gameOver();
@@ -83,7 +83,7 @@ package fr.manashield.flex.thex
 			stage.addChild(new GameWonPopup(stage));
 		}
 		
-		private function newGame(e:Event) : void
+		private function newGame(e:Event = null) : void
 		{
 			_currentUI = _currentUI.newGame();
 			_currentGame.newGame();
