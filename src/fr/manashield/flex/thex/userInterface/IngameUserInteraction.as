@@ -31,15 +31,15 @@ package fr.manashield.flex.thex.userInterface
 			switch(e.keyCode)
 			{
 				case Keyboard.RIGHT:
-				this._localEventDispatcher.dispatchEvent(new RotateBlockEvent(RotateBlockEvent.ROTATE_CW));
+				ThexEventDispatcher.instance.dispatchEvent(new RotateBlockEvent(RotateBlockEvent.ROTATE_CW));
 				break;
 				
 				case Keyboard.LEFT:
-				this._localEventDispatcher.dispatchEvent(new RotateBlockEvent(RotateBlockEvent.ROTATE_CCW));
+				ThexEventDispatcher.instance.dispatchEvent(new RotateBlockEvent(RotateBlockEvent.ROTATE_CCW));
 				break;
 				
 				case Keyboard.DOWN:
-				this._localEventDispatcher.dispatchEvent(new ForceFallEvent());
+				ThexEventDispatcher.instance.dispatchEvent(new ForceFallEvent());
 				break;
 				
 				case Keyboard.ESCAPE:

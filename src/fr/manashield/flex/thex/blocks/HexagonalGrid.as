@@ -52,8 +52,6 @@ package fr.manashield.flex.thex.blocks {
 					_stage.addChild(hex);
 				}
 			}
-			
-			//HexagonalCell(_grid[[0,0]]).occupied = true;
 		}
 		
 		/*

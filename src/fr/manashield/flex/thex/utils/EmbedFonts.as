@@ -13,6 +13,12 @@ package fr.manashield.flex.thex.utils {
 		[Embed(source='/../lib/fonts/gameOver.ttf',fontName='gameOver',fontWeight="normal",embedAsCFF=false)]
         private static var GAME_OVER:Class;
 		
+		[Embed(source='/../lib/fonts/menuTitle.ttf',fontName='menuTitle',fontWeight="normal",embedAsCFF=false)]
+        private static var MENU_TITLE:Class;
+		
+		[Embed(source='/../lib/fonts/buttons.ttf',fontName='buttons',fontWeight="normal",embedAsCFF=false)]
+        private static var buttons:Class;
+		
         public static function init():void
         {
 			Font.registerFont(SCORE);

@@ -1,4 +1,5 @@
 package fr.manashield.flex.thex {
+	import fr.manashield.flex.thex.events.ForceFallEvent;
 	import fr.manashield.flex.thex.blocks.Block;
 	import fr.manashield.flex.thex.blocks.BlockGenerator;
 	import fr.manashield.flex.thex.events.GameOverEvent;
@@ -34,9 +35,11 @@ package fr.manashield.flex.thex {
 			
 			// Listeners
 			game.timer.addEventListener(TimerEvent.TIMER_COMPLETE, _instance.moveBlockToCenter);
-		
-			//
 			game.timer.addEventListener(TimerEvent.TIMER, _instance.sparkle);
+			
+			ThexEventDispatcher.instance.addEventListener(RotateBlockEvent.ROTATE_CW, _instance.moveBlockClockwise);
+			ThexEventDispatcher.instance.addEventListener(RotateBlockEvent.ROTATE_CCW, _instance.moveBlockCounterClockwise);
+			ThexEventDispatcher.instance.addEventListener(ForceFallEvent.FORCE_FALL, _instance.forceFall);
 		
 		}
 		

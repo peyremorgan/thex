@@ -1,13 +1,8 @@
 package fr.manashield.flex.thex.userInterface {
-	import fr.manashield.flex.thex.Animation;
-	import fr.manashield.flex.thex.events.ForceFallEvent;
-	import fr.manashield.flex.thex.events.RotateBlockEvent;
 	import fr.manashield.flex.thex.utils.Abstract;
 
 	import flash.display.Stage;
-	import flash.events.Event;
 	import flash.events.EventDispatcher;
-	import flash.events.IEventDispatcher;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 
@@ -15,7 +10,7 @@ package fr.manashield.flex.thex.userInterface {
 	 * @author Morgan Peyre (morgan@peyre.info)
 	 * @author Paul Bonnet
 	 */
-	public class UserInteraction extends Abstract implements IEventDispatcher
+	public class UserInteraction extends Abstract
 	{
 		public var _localEventDispatcher:EventDispatcher;
 		public var _stage:Stage;
@@ -33,6 +28,8 @@ package fr.manashield.flex.thex.userInterface {
 			
 			if(stage) addEventListeners(stage);
 		}
+		
+		// Event listening methods and properties
 		
 		protected var events:Object = [
 			[KeyboardEvent.KEY_DOWN, keyPressed],
@@ -57,7 +54,8 @@ package fr.manashield.flex.thex.userInterface {
 			}
 		}
 		
-		// Transitions
+		// Transition methods
+		
 		public function gameOver():UserInteraction
 		{
 			removeEventListeners(_stage);
@@ -80,40 +78,6 @@ package fr.manashield.flex.thex.userInterface {
 		public function resume():UserInteraction
 		{
 			return this;
-		}
-		
-		// Event-related methods
-		public function addEventListener(type : String, listener : Function, useCapture : Boolean = false, priority : int = 0, useWeakReference : Boolean = false) : void
-		{
-			this._localEventDispatcher.addEventListener(type, listener, useCapture, priority, useWeakReference);
-		}
-		
-		public function dispatchEvent(event : Event) : Boolean
-		{
-			return this._localEventDispatcher.dispatchEvent(event);
-		}
-		
-		public function hasEventListener(type : String) : Boolean
-		{
-			return this._localEventDispatcher.hasEventListener(type);
-		}
-		
-		public function removeEventListener(type : String, listener : Function, useCapture : Boolean = false) : void 
-		{
-			this._localEventDispatcher.removeEventListener(type, listener, useCapture);
-		}
-		
-		public function willTrigger(type : String) : Boolean 
-		{
-			return this._localEventDispatcher.willTrigger(type);
-		}
-		
-		// Listeners registration
-		public function registerListeners():void
-		{
-			addEventListener(RotateBlockEvent.ROTATE_CW, Animation.instance.moveBlockClockwise);
-			addEventListener(RotateBlockEvent.ROTATE_CCW, Animation.instance.moveBlockCounterClockwise);
-			addEventListener(ForceFallEvent.FORCE_FALL, Animation.instance.forceFall);
 		}
 	}
 }

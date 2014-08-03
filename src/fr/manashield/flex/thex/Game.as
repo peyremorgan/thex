@@ -60,8 +60,6 @@ package fr.manashield.flex.thex
 			// initialze and launch the animation of the falling blocks
 			Animation.initialize(this);
 			
-			this.newGame();
-			
 			// Initialize timer
 			this._clockTimer.addEventListener(TimerEvent.TIMER_COMPLETE, this.tick);
 			

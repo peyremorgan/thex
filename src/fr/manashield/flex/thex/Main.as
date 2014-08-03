@@ -1,12 +1,13 @@
 package fr.manashield.flex.thex 
 {
+	import fr.manashield.flex.thex.userInterface.MenuUserInteraction;
+	import fr.manashield.flex.thex.userInterface.IngameUserInteraction;
 	import fr.manashield.flex.thex.events.GameOverEvent;
 	import fr.manashield.flex.thex.events.NewGameEvent;
 	import fr.manashield.flex.thex.events.PauseEvent;
 	import fr.manashield.flex.thex.events.ThexEventDispatcher;
 	import fr.manashield.flex.thex.userInterface.GameOverPopup;
 	import fr.manashield.flex.thex.userInterface.GameWonPopup;
-	import fr.manashield.flex.thex.userInterface.IngameUserInteraction;
 	import fr.manashield.flex.thex.userInterface.PausePopup;
 	import fr.manashield.flex.thex.userInterface.UserInteraction;
 	import fr.manashield.flex.thex.utils.EmbedFonts;
@@ -14,7 +15,7 @@ package fr.manashield.flex.thex
 	import flash.display.Sprite;
 	import flash.events.Event;
 
-	[SWF(width="900",height="900",backgroundColor="#ffffff",frameRate="100")]
+	[SWF(width="900",height="900",backgroundColor="#ffffff",frameRate="60")]
 	/**
 	 * @author Morgan Peyre (morgan@peyre.info)
 	 * @author Paul Bonnet
@@ -37,20 +38,18 @@ package fr.manashield.flex.thex
 		}
 
 		private function init(e:Event=null) : void
-		{
+		{			
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-			
 			EmbedFonts.init();
 			
-			_currentGame = new Game(stage);
+			stage.addChild(new Menu(stage));
+			_currentUI = new MenuUserInteraction(stage);
+			
 			ThexEventDispatcher.instance.addEventListener(GameOverEvent.GAME_LOST, gameOver);
 			ThexEventDispatcher.instance.addEventListener(GameOverEvent.GAME_WON, gameWon);
 			ThexEventDispatcher.instance.addEventListener(NewGameEvent.NEW_GAME, newGame);
 			ThexEventDispatcher.instance.addEventListener(PauseEvent.PAUSE, pause);
 			ThexEventDispatcher.instance.addEventListener(PauseEvent.RESUME, resume);
-			
-			_currentUI = new IngameUserInteraction(stage);
-			_currentUI.registerListeners();
 		}
 		
 		private function resume(e:Event = null) : void
@@ -85,6 +84,11 @@ package fr.manashield.flex.thex
 		
 		private function newGame(e:Event = null) : void
 		{
+			if(_currentGame == null)
+			{
+				_currentGame = new Game(stage);
+			}
+			
 			_currentUI = _currentUI.newGame();
 			_currentGame.newGame();
 		}
