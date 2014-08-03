@@ -1,7 +1,7 @@
 #thex
 _A gravity-enabled bubble shooter on an hexagon_
 
-_thex_ plays like Tetris, but works like Bubble Shooter : you start with a grid full of random colored blocks, and try and empty it before the time runs out.
+_**thex**_ plays like Tetris, but works like Bubble Shooter : you start with a grid full of random colored blocks, and try and empty it before the time runs out.
 
 This is a work in progress (see [**What's left to do**](#whats-left-to-do)): we're currently in very early alpha.
 
