@@ -8,8 +8,9 @@ This is a work in progress (see [**What's left to do**](#whats-left-to-do)): we'
 ![A screenshot of the game](http://s9.postimg.org/5a3qrp6cv/screen.png)
 
 ###Controls
-`LEFT` and `RIGHT`: rotate the falling block around the central hexagon
-`DOWN`: Move the falling block towards the central hexagon
+
+`LEFT` and `RIGHT`: rotate the falling block around the central hexagon<br />
+`DOWN`: Move the falling block towards the central hexagon<br />
 `ESC`: Pause
 
 ###Support
