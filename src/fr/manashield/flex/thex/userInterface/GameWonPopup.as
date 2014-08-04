@@ -1,4 +1,5 @@
 package fr.manashield.flex.thex.userInterface {
+	import fr.manashield.flex.thex.blocks.HexagonalGrid;
 	import flash.display.Stage;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -16,7 +17,7 @@ package fr.manashield.flex.thex.userInterface {
 			_score = new TextField();
 			_score.defaultTextFormat = new TextFormat("score", 100, 0xFFFFFF);
 			_score.embedFonts = true;
-			_score.text = TextField(stage.getChildByName("_scoreField")).text;
+			_score.text = TextField(HexagonalGrid.instance.getChildByName("_scoreField")).text;
 			_score.autoSize = TextFieldAutoSize.LEFT;
 			_score.x = stage.stageWidth/2 - _score.width/2;
 			_score.y = stage.stageHeight/2 - _score.height/3;

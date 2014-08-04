@@ -1,18 +1,18 @@
 package fr.manashield.flex.thex.blocks {
 	import fr.manashield.flex.thex.geometry.Hexagon;
 
+	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.geom.Point;
 	/**
 	 * @author Morgan Peyre (morgan@peyre.info)
 	 * @author Paul Bonnet
 	 */
-	public class HexagonalGrid 
+	public class HexagonalGrid extends Sprite
 	{
 		protected static var _instance:HexagonalGrid;
 		
 		protected var _grid:Object;
-		protected var _stage:Stage;
 		protected var _gridSize:int;
 		
 		/*
@@ -26,11 +26,12 @@ package fr.manashield.flex.thex.blocks {
 		/*
 		 * constructor
 		 */
-		public function HexagonalGrid(stage:Stage, cellRadius:uint, width:uint = 100, height:uint = 100) : void
-		{			
+		public function HexagonalGrid(stage:Stage, cellRadius:uint, childIndex:uint = 0, width:uint = 100, height:uint = 100) : void
+		{
 			_grid = new Object();
-			_stage = stage;
 			_gridSize = cellRadius;
+			
+			stage.addChildAt(this, childIndex);
 			
 			for(var u:int = -width/2; u < width/2; ++u)
 			for(var v:int = -height/2; v < height/2; ++v)
@@ -42,14 +43,13 @@ package fr.manashield.flex.thex.blocks {
 			var radius:uint = Math.min(width,height)/2;
 			for(var i:uint=1; i<radius; ++i)
 			{
-				var currentColor:uint = i%2?0xABABAB:0xEFE500;	
+				var currentColor:uint = i%2?0xF5F5F5:0xFAFAFA;	
 				var nextCell:HexagonalCell = _grid[[0, i]];
 				for(var j:uint=0; j<i*6; ++j)
 				{
 					nextCell = nextCell.clockwiseNeighbor;
-					var hex:Hexagon = new Hexagon(nextCell.center, HexagonalCell(_grid[[0, i]]).parent.gridSize, (j+1)%i?currentColor:0x000000, "flat");
-					hex.alpha = 0.1;
-					_stage.addChild(hex);
+					var hex:Hexagon = new Hexagon(nextCell.center, HexagonalCell(_grid[[0, i]]).parent.gridSize, (j+1)%i?currentColor:0xE8E8E8, "flat");
+					addChild(hex);
 				}
 			}
 		}
@@ -59,8 +59,8 @@ package fr.manashield.flex.thex.blocks {
 		 */
 		public function hexToCartesian(point:Point) : Point
 		{
-			var x:int = diapothem()*point.x*Math.cos(Math.PI/6) + Number(_stage.stageWidth)/2;
-			var y:int = - diapothem()*(point.y + point.x*Math.sin(Math.PI/6)) + Number(_stage.stageHeight)/2;
+			var x:int = diapothem()*point.x*Math.cos(Math.PI/6) + Number(stage.stageWidth)/2;
+			var y:int = - diapothem()*(point.y + point.x*Math.sin(Math.PI/6)) + Number(stage.stageHeight)/2;
 			
 			return new Point(x, y);
 		}
@@ -70,8 +70,8 @@ package fr.manashield.flex.thex.blocks {
 		 */
 		public function cartesianToHex(point:Point) : Point
 		{
-			var u:int = Math.round((point.x - Number(_stage.stageWidth)/2)/(diapothem()*Math.cos(Math.PI/6)));
-			var v:int = Math.round(-(point.y - Number(_stage.stageHeight)/2)/diapothem() - u*Math.sin(Math.PI/6));
+			var u:int = Math.round((point.x - Number(stage.stageWidth)/2)/(diapothem()*Math.cos(Math.PI/6)));
+			var v:int = Math.round(-(point.y - Number(stage.stageHeight)/2)/diapothem() - u*Math.sin(Math.PI/6));
 
 			return new Point(u, v);
 		}
@@ -91,14 +91,6 @@ package fr.manashield.flex.thex.blocks {
 		protected function diapothem():Number
 		{
 			return 2 * _gridSize * Math.cos(Math.PI/6);
-		}
-		
-		/*
-		 * getter for the stage, where you can add all your displayable objects
-		 */
-		public function get stage():Stage
-		{
-			return _stage;
 		}
 		
 		/*

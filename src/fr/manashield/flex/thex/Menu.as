@@ -20,13 +20,34 @@ package fr.manashield.flex.thex {
 	 */
 	public class Menu extends Sprite
 	{
-		private static const BUTTON:String = "button";
+		//private static const BUTTON:String = "button";
 		
 		protected var _activeButton:SimpleButton;
+		protected var _frame:uint;
+		protected const _fadeOutDuration:Number = 0.5; // In seconds
+		
+		/*
 		protected const _buttons:Object = [
 			["Campaign", campaign],
 			["Normal", normal],
 			["Settings", settings]
+		];*/
+		protected const _buttons:Object = [
+			{
+				title:"Campaign",
+				method:campaign,
+				button:null
+			},
+			{
+				title:"Normal",
+				method:normal,
+				button:null
+			},
+			{
+				title:"Settings",
+				method:settings,
+				button:null
+			}
 		];
 		
 		/*
@@ -38,7 +59,7 @@ package fr.manashield.flex.thex {
 		/*
 		 * scaling constants
 		 */
-		protected static const _bannerWidthScale:Number 		= 0.8;
+		protected static const _bannerWidthScale:Number 		= 1;
 		protected static const _bannerHeightScale:Number 		= 1;
 		
 		protected static const _buttonsWidthScale:Number 		= 0.5;
@@ -71,6 +92,7 @@ package fr.manashield.flex.thex {
 		public function Menu(stage:Stage)
 		{
 			// Calculate resolution-dependent variables
+			_frame = 0;
 			_bannerWidth = stage.stageWidth*_bannerWidthScale;
 			_bannerHeight = stage.stageHeight*_bannerHeightScale;
 			_buttonWidth = stage.stageWidth*_buttonsWidthScale;
@@ -81,7 +103,7 @@ package fr.manashield.flex.thex {
 			_buttonsTopMargin = stage.stageHeight*_buttonsTopMarginScale;
 			_interbuttonMargin = stage.stageHeight*_interButtonScale;
 			
-			
+			/*
 			// create background
 			_background = new Sprite();
 			_background.graphics.beginFill(0xF5F5F5);
@@ -89,6 +111,7 @@ package fr.manashield.flex.thex {
 			_background.graphics.endFill();
 			_background.alpha = 0.5;
 			this.addChild(_background);
+			 */
 			
 			// create banner
 			var _gradientMatrix:Matrix = new Matrix();
@@ -117,7 +140,7 @@ package fr.manashield.flex.thex {
 			// Create buttons
 			for (var i:uint=0; i < numberOfButtons; ++i)
 			{
-				_buttons[i][BUTTON] = createButton(
+				_buttons[i].button = createButton(
 					_buttons[i], 
 					_buttonWidth, 
 					_buttonHeight,
@@ -126,11 +149,30 @@ package fr.manashield.flex.thex {
 				);
 			}
 			
-			toggleON(_activeButton = _buttons[0][BUTTON]);
+			toggleON(_activeButton = _buttons[0].button);
 			
 			ThexEventDispatcher.instance.addEventListener(MenuEvent.NEXT_ITEM, nextItem);
 			ThexEventDispatcher.instance.addEventListener(MenuEvent.PREVIOUS_ITEM, previousItem);
 			ThexEventDispatcher.instance.addEventListener(MenuEvent.SELECT, select);
+		}
+		
+		public function fadeOut(e:Event=null):void
+		{
+			if(_frame == 0)
+			{
+				addEventListener(Event.ENTER_FRAME, fadeOut);
+			}
+			
+			if(_frame<stage.frameRate*_fadeOutDuration)
+			{
+				this.y -= stage.stageHeight/(stage.frameRate*_fadeOutDuration);
+			}
+			else
+			{
+				removeEventListener(Event.ENTER_FRAME, fadeOut);
+				stage.removeChild(this);
+			}
+			++_frame;
 		}
 		
 		private function nextItem(e:Event = null):void
@@ -147,9 +189,9 @@ package fr.manashield.flex.thex {
 		{
 			for each(var o:Object in _buttons)
 			{
-				if(o[BUTTON] == _activeButton)
+				if(o.button == _activeButton)
 				{
-					o[1]();
+					o.method();
 				}
 			}
 		}
@@ -170,13 +212,13 @@ package fr.manashield.flex.thex {
 		public function createButton(buttonPrototype:Object, width:uint, height:uint, X:uint, Y:uint):SimpleButton
 		{
 			// let the magic happen
-			var toto:Sprite = new buttonLayer(X, Y, width, height, new TextFormat("buttons", height*0.8, 0x888888, null, null, null, null, null, TextFormatAlign.CENTER), buttonPrototype[0], false);
-			var titi:Sprite = new buttonLayer(X, Y, width, height, new TextFormat("buttons", height*0.8, 0x888888, null, null, null, null, null, TextFormatAlign.CENTER), buttonPrototype[0], true);
+			var toto:Sprite = new buttonLayer(X, Y, width, height, new TextFormat("buttons", height*0.8, 0x888888, null, null, null, null, null, TextFormatAlign.CENTER), buttonPrototype.title, false);
+			var titi:Sprite = new buttonLayer(X, Y, width, height, new TextFormat("buttons", height*0.8, 0x888888, null, null, null, null, null, TextFormatAlign.CENTER), buttonPrototype.title, true);
 			
 			var button:SimpleButton = new SimpleButton(toto, titi, toto, toto);
 			this.addChild(button);
 			
-			button.addEventListener(MouseEvent.CLICK, buttonPrototype[1]);
+			button.addEventListener(MouseEvent.CLICK, buttonPrototype.method);
 			button.addEventListener(MouseEvent.MOUSE_OVER, mouseEntered);
 			
 			return button;
@@ -211,22 +253,22 @@ package fr.manashield.flex.thex {
 			
 			for(var i:String in _buttons)
 			{
-				if(_buttons[i][BUTTON] == _activeButton)
+				if(_buttons[i].button == _activeButton)
 				{
 					if(parseInt(i) < numberOfButtons-1)
 					{
-						returnValue = _buttons[parseInt(i)+1][BUTTON];
+						returnValue = _buttons[parseInt(i)+1].button;
 					}
 					else
 					{
-						returnValue = _buttons[0][BUTTON];
+						returnValue = _buttons[0].button;
 					}
 				}
 			}
 			
 			if(returnValue == null)
 			{
-				returnValue = _buttons[0][BUTTON];
+				returnValue = _buttons[0].button;
 				trace("[WARNING]: Unexpected state for _activeButton: "+_activeButton);
 			}
 			return returnValue;
@@ -238,22 +280,22 @@ package fr.manashield.flex.thex {
 			
 			for(var i:String in _buttons)
 			{
-				if(_buttons[i][BUTTON] == _activeButton)
+				if(_buttons[i].button == _activeButton)
 				{
 					if(parseInt(i) > 0)
 					{
-						returnValue = _buttons[parseInt(i)-1][BUTTON];
+						returnValue = _buttons[parseInt(i)-1].button;
 					}
 					else
 					{
-						returnValue = _buttons[numberOfButtons-1][BUTTON];
+						returnValue = _buttons[numberOfButtons-1].button;
 					}
 				}
 			}
 			
 			if(returnValue == null)
 			{
-				returnValue = _buttons[numberOfButtons-1][BUTTON];
+				returnValue = _buttons[numberOfButtons-1].button;
 				trace("[WARNING]: Unexpected state for _activeButton: "+_activeButton);
 			}
 			return returnValue;
@@ -267,7 +309,7 @@ package fr.manashield.flex.thex {
 		private function normal(e:Event = null):void
 		{
 			stage.focus = stage;
-			stage.removeChild(this);
+			//stage.removeChild(this);
 			ThexEventDispatcher.instance.dispatchEvent(new NewGameEvent());
 		}
 		

@@ -1,11 +1,11 @@
 package fr.manashield.flex.thex.geometry {
-	import flash.display.Shape;
+	import flash.display.Sprite;
 	import flash.geom.Point;
 	/**
 	 * @author Morgan Peyre (morgan@peyre.info)
 	 * @author Paul Bonnet
 	 */
-	public class Polygon extends Shape
+	public class Polygon extends Sprite
 	{
 		protected var _size:uint;
 		protected var _color:uint;
@@ -25,13 +25,13 @@ package fr.manashield.flex.thex.geometry {
 			
 			var theta:Number;
 			
-			if(shape == "emboss")
-			{
-				//this.graphics.lineStyle(2, darkenColor(color, 0.9), 0.5);
-			}
-			else
-			{
-				this.graphics.lineStyle(2, 0x000000, 0.5);
+			switch(shape){
+				case "emboss":
+					break;
+					
+				case "flat":
+					this.graphics.lineStyle(2, 0xD8D8D8, 0.5);
+					break;
 			}
 			
 			//outer polygon

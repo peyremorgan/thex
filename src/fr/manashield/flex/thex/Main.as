@@ -1,13 +1,12 @@
 package fr.manashield.flex.thex 
 {
-	import fr.manashield.flex.thex.userInterface.MenuUserInteraction;
-	import fr.manashield.flex.thex.userInterface.IngameUserInteraction;
 	import fr.manashield.flex.thex.events.GameOverEvent;
 	import fr.manashield.flex.thex.events.NewGameEvent;
 	import fr.manashield.flex.thex.events.PauseEvent;
 	import fr.manashield.flex.thex.events.ThexEventDispatcher;
 	import fr.manashield.flex.thex.userInterface.GameOverPopup;
 	import fr.manashield.flex.thex.userInterface.GameWonPopup;
+	import fr.manashield.flex.thex.userInterface.MenuUserInteraction;
 	import fr.manashield.flex.thex.userInterface.PausePopup;
 	import fr.manashield.flex.thex.userInterface.UserInteraction;
 	import fr.manashield.flex.thex.utils.EmbedFonts;
@@ -23,7 +22,8 @@ package fr.manashield.flex.thex
 	public class Main extends Sprite 
 	{
 		protected var _currentUI:UserInteraction;
-		protected var _currentGame:Game = null;
+		protected var _currentGame:Game;
+		protected var _menu:Menu;
 		
 		public function Main() : void
 		{
@@ -42,7 +42,8 @@ package fr.manashield.flex.thex
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			EmbedFonts.init();
 			
-			stage.addChild(new Menu(stage));
+			stage.addChild(_menu = new Menu(stage));
+			_currentGame = new Game(stage);
 			_currentUI = new MenuUserInteraction(stage);
 			
 			ThexEventDispatcher.instance.addEventListener(GameOverEvent.GAME_LOST, gameOver);
@@ -87,6 +88,14 @@ package fr.manashield.flex.thex
 			if(_currentGame == null)
 			{
 				_currentGame = new Game(stage);
+			}
+			
+			_currentGame.preLoad();
+			
+			if(_menu)
+			{
+				_menu.fadeOut();
+				_menu = null;
 			}
 			
 			_currentUI = _currentUI.newGame();

@@ -54,7 +54,7 @@ package fr.manashield.flex.thex {
 				if(Math.floor(Math.random()*Game.TIMER_PERIOD*10))
 					continue;
 
-				block.symbol.stage.addChild(new Sparkle(block.symbol.localToGlobal(sparklesPos[Math.floor(Math.random()*sparklesPos.length)])));
+				block.symbol.addChild(new Sparkle(sparklesPos[Math.floor(Math.random()*sparklesPos.length)]));
 			}
 		}
 		
@@ -144,9 +144,8 @@ package fr.manashield.flex.thex {
 		
 		public function reset():void
 		{
-			// Carefull: the destroy method modifies the staticBlocks array
-			var length:uint = staticBlocks.length;
-			for (var i:uint=0; i<length; ++i)
+			// Beware: the destroy method modifies the staticBlocks array
+			while(staticBlocks.length>0)
 			{
 				staticBlocks[0].destroy();
 			}

@@ -37,14 +37,14 @@ package fr.manashield.flex.thex
 		{
 			// Game board
 			_stage = stage;
-			HexagonalGrid.init(_stage, CELL_RADIUS);
-			_origin = _origin = HexagonalGrid.instance.hexToCartesian(new Point(0,0));
+			HexagonalGrid.init(_stage, CELL_RADIUS, 0);
+			_origin = HexagonalGrid.instance.hexToCartesian(new Point(0,0));
 			
 			// Score field
 			_scoreField = new TextField();
 			_scoreField.name = "_scoreField";
 			_scoreField.autoSize = TextFieldAutoSize.LEFT;
-			stage.addChild(_scoreField);
+			HexagonalGrid.instance.addChild(_scoreField);
 
 			var format:TextFormat = new TextFormat();
 			format.size = 100;
@@ -62,6 +62,9 @@ package fr.manashield.flex.thex
 			
 			// Initialize timer
 			this._clockTimer.addEventListener(TimerEvent.TIMER_COMPLETE, this.tick);
+			
+			///
+			
 			
 		}
 		
@@ -116,6 +119,12 @@ package fr.manashield.flex.thex
 		
 		public function newGame():void
 		{
+			// Start timer
+			this.timer.start();
+		}
+		
+		public function preLoad():void
+		{
 			// Reset score
 			_score = 20;
 			_scoreField.text = _score.toString();
@@ -131,9 +140,6 @@ package fr.manashield.flex.thex
 			
 			// create first falling block
 			BlockGenerator.instance.spawnBlock();
-			
-			// Start timer
-			this.timer.start();
 		}
 		
 		public function get score():uint

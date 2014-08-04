@@ -34,7 +34,7 @@ package fr.manashield.flex.thex.blocks {
 			_symbol = new Hexagon(startCell.center, startCell.parent.gridSize, color.hexValue);
 			
 			startCell.block = this;
-			startCell.parent.stage.addChild(this._symbol);
+			HexagonalGrid.instance.addChild(this._symbol);
 		}
 		
 		protected function zboing(e:Event):void
