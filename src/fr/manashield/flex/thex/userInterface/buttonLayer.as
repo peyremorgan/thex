@@ -2,14 +2,17 @@ package fr.manashield.flex.thex.userInterface {
 	import flash.display.Sprite;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
 	/**
 	 * @author Paul
 	 */
-	public class buttonLayer extends Sprite
+	public class ButtonLayer extends Sprite
 	{
 		
-		public function buttonLayer(X:uint, Y:uint, width:uint, height:uint, textFormat:TextFormat, text:String, selected:Boolean, backgroundColor:uint = 0xFFFFFF)
+		public function ButtonLayer(X:uint, Y:uint, width:uint, height:uint, textFormat:TextFormat, text:String, selected:Boolean, backgroundColor:uint = 0xFFFFFF)
 		{
+			textFormat.align = TextFormatAlign.CENTER;
+			
 			graphics.beginFill(backgroundColor);
 			graphics.drawRect(X, Y, width, height);
 			graphics.endFill();

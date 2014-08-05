@@ -2,7 +2,7 @@ package fr.manashield.flex.thex {
 	import fr.manashield.flex.thex.events.MenuEvent;
 	import fr.manashield.flex.thex.events.NewGameEvent;
 	import fr.manashield.flex.thex.events.ThexEventDispatcher;
-	import fr.manashield.flex.thex.userInterface.buttonLayer;
+	import fr.manashield.flex.thex.userInterface.ButtonLayer;
 
 	import flash.display.GradientType;
 	import flash.display.SimpleButton;
@@ -89,7 +89,7 @@ package fr.manashield.flex.thex {
 		protected var _buttonsTopMargin:uint;
 		protected var _interbuttonMargin:uint;
 		
-		public function Menu(stage:Stage)
+		public function Menu(stage:Stage, animateIn:Boolean=true)
 		{
 			// Calculate resolution-dependent variables
 			_frame = 0;
@@ -151,28 +151,76 @@ package fr.manashield.flex.thex {
 			
 			toggleON(_activeButton = _buttons[0].button);
 			
+			if(animateIn)
+			{
+				this.y -= stage.stageHeight;
+				stage.addChild(this);
+				fadeIn();
+			}
+			else
+			{
+				stage.addChild(this);
+			}
+			
 			ThexEventDispatcher.instance.addEventListener(MenuEvent.NEXT_ITEM, nextItem);
 			ThexEventDispatcher.instance.addEventListener(MenuEvent.PREVIOUS_ITEM, previousItem);
 			ThexEventDispatcher.instance.addEventListener(MenuEvent.SELECT, select);
 		}
 		
+		public function fadeIn(e:Event=null):void
+		{
+			++_frame;
+			
+			if(_frame == 1)
+			{
+				addEventListener(Event.ENTER_FRAME, fadeIn);
+			}
+			
+			if(_frame<=stage.frameRate*_fadeOutDuration)
+			{
+				this.y += stage.stageHeight/(stage.frameRate*_fadeOutDuration);
+			}
+			else
+			{
+				removeEventListener(Event.ENTER_FRAME, fadeIn);
+				_frame = 0;
+			}
+		}
+		
 		public function fadeOut(e:Event=null):void
 		{
-			if(_frame == 0)
+			++_frame;
+			
+			if(_frame == 1)
 			{
 				addEventListener(Event.ENTER_FRAME, fadeOut);
 			}
 			
-			if(_frame<stage.frameRate*_fadeOutDuration)
+			if(_frame<=stage.frameRate*_fadeOutDuration)
 			{
 				this.y -= stage.stageHeight/(stage.frameRate*_fadeOutDuration);
 			}
 			else
 			{
 				removeEventListener(Event.ENTER_FRAME, fadeOut);
-				stage.removeChild(this);
+				this.destroy();
+				_frame = 0;
 			}
-			++_frame;
+		}
+		
+		private function destroy():void
+		{
+			for(var i:String in _buttons)
+			{
+				_buttons[i].button.removeEventListener(MouseEvent.CLICK, _buttons[i].method);
+				_buttons[i].button.removeEventListener(MouseEvent.MOUSE_OVER, mouseEntered);
+			}
+			
+			ThexEventDispatcher.instance.removeEventListener(MenuEvent.NEXT_ITEM, nextItem);
+			ThexEventDispatcher.instance.removeEventListener(MenuEvent.PREVIOUS_ITEM, previousItem);
+			ThexEventDispatcher.instance.removeEventListener(MenuEvent.SELECT, select);
+			
+			stage.removeChild(this);
 		}
 		
 		private function nextItem(e:Event = null):void
@@ -209,11 +257,35 @@ package fr.manashield.flex.thex {
 			return buttonsCount;
 		}
 		
-		public function createButton(buttonPrototype:Object, width:uint, height:uint, X:uint, Y:uint):SimpleButton
+		public function createButton(
+			buttonPrototype:Object,
+			 width:uint, 
+			 height:uint, 
+			 X:uint, 
+			 Y:uint
+		):SimpleButton
 		{
 			// let the magic happen
-			var toto:Sprite = new buttonLayer(X, Y, width, height, new TextFormat("buttons", height*0.8, 0x888888, null, null, null, null, null, TextFormatAlign.CENTER), buttonPrototype.title, false);
-			var titi:Sprite = new buttonLayer(X, Y, width, height, new TextFormat("buttons", height*0.8, 0x888888, null, null, null, null, null, TextFormatAlign.CENTER), buttonPrototype.title, true);
+			var toto:Sprite = new ButtonLayer
+			(
+				X,
+				Y,
+				width,
+				height,
+				new TextFormat("buttons", height*0.8, 0x888888),
+				buttonPrototype.title,
+				false
+			);
+			var titi:Sprite = new ButtonLayer
+			(
+				X,
+				Y,
+				width,
+				height,
+				new TextFormat("buttons", height*0.8, 0x888888),
+				buttonPrototype.title,
+				true
+			);
 			
 			var button:SimpleButton = new SimpleButton(toto, titi, toto, toto);
 			this.addChild(button);
@@ -309,7 +381,6 @@ package fr.manashield.flex.thex {
 		private function normal(e:Event = null):void
 		{
 			stage.focus = stage;
-			//stage.removeChild(this);
 			ThexEventDispatcher.instance.dispatchEvent(new NewGameEvent());
 		}
 		

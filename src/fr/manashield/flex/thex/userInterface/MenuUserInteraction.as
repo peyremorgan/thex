@@ -39,5 +39,9 @@ package fr.manashield.flex.thex.userInterface {
 			}
 		}
 		
+		public override function menu():UserInteraction
+		{
+			return this;
+		}
 	}
 }

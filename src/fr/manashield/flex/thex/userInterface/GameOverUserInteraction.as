@@ -7,8 +7,6 @@ package fr.manashield.flex.thex.userInterface {
 	 */
 	public class GameOverUserInteraction extends UserInteraction
 	{
-		
-		
 		public function GameOverUserInteraction(stage:Stage, eventDispatcher:EventDispatcher = null):void
 		{
 			super(stage, eventDispatcher);

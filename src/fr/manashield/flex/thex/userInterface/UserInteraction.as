@@ -79,5 +79,12 @@ package fr.manashield.flex.thex.userInterface {
 		{
 			return this;
 		}
+		
+		public function menu():UserInteraction
+		{
+			removeEventListeners(_stage);
+			
+			return new MenuUserInteraction(_stage, _localEventDispatcher);
+		}
 	}
 }

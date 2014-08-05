@@ -1,5 +1,5 @@
 package fr.manashield.flex.thex.userInterface {
-	import fr.manashield.flex.thex.events.ResumeEvent;
+	import fr.manashield.flex.thex.events.PauseEvent;
 	import fr.manashield.flex.thex.events.ThexEventDispatcher;
 
 	import flash.display.Stage;
@@ -24,6 +24,8 @@ package fr.manashield.flex.thex.userInterface {
 		
 		public override function resume():UserInteraction
 		{
+			removeEventListeners(_stage);
+			
 			return new IngameUserInteraction(_stage, _localEventDispatcher);
 		}
 		
@@ -32,7 +34,7 @@ package fr.manashield.flex.thex.userInterface {
 			switch(e.keyCode)
 			{
 				case Keyboard.ESCAPE:
-				ThexEventDispatcher.instance.dispatchEvent(new ResumeEvent());
+				ThexEventDispatcher.instance.dispatchEvent(new PauseEvent(PauseEvent.RESUME));
 				break;
 			}
 		}

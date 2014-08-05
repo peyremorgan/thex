@@ -1,6 +1,6 @@
 #TODO#
-	
--	Main menu
+
+-   changer les creation des boutons dans tous les popup en utilisant la classe ButtonLayer
 
 -	Premade maps
 	Campaign

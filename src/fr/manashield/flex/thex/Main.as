@@ -1,5 +1,6 @@
 package fr.manashield.flex.thex 
 {
+	import fr.manashield.flex.thex.events.MenuEvent;
 	import fr.manashield.flex.thex.events.GameOverEvent;
 	import fr.manashield.flex.thex.events.NewGameEvent;
 	import fr.manashield.flex.thex.events.PauseEvent;
@@ -42,7 +43,7 @@ package fr.manashield.flex.thex
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			EmbedFonts.init();
 			
-			stage.addChild(_menu = new Menu(stage));
+			_menu = new Menu(stage, false);
 			_currentGame = new Game(stage);
 			_currentUI = new MenuUserInteraction(stage);
 			
@@ -51,6 +52,7 @@ package fr.manashield.flex.thex
 			ThexEventDispatcher.instance.addEventListener(NewGameEvent.NEW_GAME, newGame);
 			ThexEventDispatcher.instance.addEventListener(PauseEvent.PAUSE, pause);
 			ThexEventDispatcher.instance.addEventListener(PauseEvent.RESUME, resume);
+			ThexEventDispatcher.instance.addEventListener(MenuEvent.MENU, menu);
 		}
 		
 		private function resume(e:Event = null) : void
@@ -100,6 +102,16 @@ package fr.manashield.flex.thex
 			
 			_currentUI = _currentUI.newGame();
 			_currentGame.newGame();
+		}
+		
+		private function menu(e:Event = null):void
+		{
+			if(this._menu == null)
+			{
+				this._menu = new Menu(stage, true);
+				_currentGame.gameOver();
+				_currentUI = _currentUI.menu();
+			}
 		}
 	}
 }

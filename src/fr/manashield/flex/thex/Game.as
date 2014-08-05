@@ -62,10 +62,6 @@ package fr.manashield.flex.thex
 			
 			// Initialize timer
 			this._clockTimer.addEventListener(TimerEvent.TIMER_COMPLETE, this.tick);
-			
-			///
-			
-			
 		}
 		
 		protected function tick(e:Event):void
