@@ -1,5 +1,4 @@
 package fr.manashield.flex.thex.blocks {
-	import fr.manashield.flex.thex.Animation;
 	import fr.manashield.flex.thex.geometry.Hexagon;
 	import fr.manashield.flex.thex.utils.CellAlreadyOccupiedError;
 	import fr.manashield.flex.thex.utils.Color;
@@ -104,8 +103,6 @@ package fr.manashield.flex.thex.blocks {
 
 			_frameNbDestroy = 0;
 			_symbol.addEventListener(Event.ENTER_FRAME, destroySymbol);
-			
-			Animation.instance.removeBlock(this);
 		}
 		
 		protected function destroySymbol(event:Event):void
@@ -121,29 +118,6 @@ package fr.manashield.flex.thex.blocks {
 				_symbol.parent.removeChild(this.symbol);
 			}
 			++_frameNbDestroy;
-		}
-		
-		public function destroyIf(color:Color, visitedBlocks:Vector.<Block> = null):void
-		{
-			if(!visitedBlocks)
-			{
-				visitedBlocks = new Vector.<Block>();
-			}
-			
-			visitedBlocks.push(this);
-			
-			if (_color == color)
-			{
-				for each(var neighbor:Block in this.neighbors)
-				{
-					if(neighbor.color == visitedBlocks[0].color && visitedBlocks.lastIndexOf(neighbor) == -1)
-					{
-						neighbor.destroyIf(color, visitedBlocks);
-					}
-				}
-				
-				this.destroy();
-			}
 		}
 		
 		public function get neighbors():Vector.<Block>
@@ -169,7 +143,7 @@ package fr.manashield.flex.thex.blocks {
 		/*
 		 * counts the blocks of the same color from near to near
 		 */
-		public function sameColorNeighbors(visitedBlocks:Vector.<Block> = null):uint
+		public function sameColorNeighbors(visitedBlocks:Vector.<Block> = null):Vector.<Block>
 		{		
 			if(!visitedBlocks)
 			{
@@ -186,7 +160,7 @@ package fr.manashield.flex.thex.blocks {
 				}
 			}
 			
-			return visitedBlocks.length;
+			return visitedBlocks;
 		}
 	}
 }

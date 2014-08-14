@@ -43,8 +43,10 @@ package fr.manashield.flex.thex
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			EmbedFonts.init();
 			
-			_menu = new Menu(stage, false);
+			_menu = new Menu(stage);
+			
 			_currentGame = new Game(stage);
+			
 			_currentUI = new MenuUserInteraction(stage);
 			
 			ThexEventDispatcher.instance.addEventListener(GameOverEvent.GAME_LOST, gameOver);
@@ -70,7 +72,7 @@ package fr.manashield.flex.thex
 		}
 		
 		private function gameOver(e:Event = null) : void
-		{			
+		{
 			_currentUI = _currentUI.gameOver();
 			_currentGame.gameOver();
 			
@@ -93,7 +95,6 @@ package fr.manashield.flex.thex
 			}
 			
 			_currentGame.preLoad();
-			
 			if(_menu)
 			{
 				_menu.fadeOut();

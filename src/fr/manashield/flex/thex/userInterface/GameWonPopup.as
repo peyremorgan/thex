@@ -30,9 +30,3 @@ package fr.manashield.flex.thex.userInterface {
 		}
 	}
 }
-
-
-
-
-
-

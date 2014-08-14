@@ -24,6 +24,7 @@ package fr.manashield.flex.thex {
 		
 		protected var _activeButton:SimpleButton;
 		protected var _frame:uint;
+		protected var _stage:Stage;
 		protected const _fadeOutDuration:Number = 0.5; // In seconds
 		
 		/*
@@ -91,77 +92,84 @@ package fr.manashield.flex.thex {
 		
 		public function Menu(stage:Stage, animateIn:Boolean=true)
 		{
-			// Calculate resolution-dependent variables
 			_frame = 0;
-			_bannerWidth = stage.stageWidth*_bannerWidthScale;
-			_bannerHeight = stage.stageHeight*_bannerHeightScale;
-			_buttonWidth = stage.stageWidth*_buttonsWidthScale;
-			_buttonHeight = stage.stageWidth*(_buttonsHeightScale/numberOfButtons-_interButtonScale);
-			_titleWidth = stage.stageWidth*_titleWidthScale;
-			_titleHeight = stage.stageHeight*_titleHeightScale;
-			_topMargin = stage.stageHeight*_topMarginScale;
-			_buttonsTopMargin = stage.stageHeight*_buttonsTopMarginScale;
-			_interbuttonMargin = stage.stageHeight*_interButtonScale;
+			_stage = stage;
 			
-			/*
-			// create background
-			_background = new Sprite();
-			_background.graphics.beginFill(0xF5F5F5);
-			_background.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
-			_background.graphics.endFill();
-			_background.alpha = 0.5;
-			this.addChild(_background);
-			 */
+			calculateResolutionDependentVariables();
+			createBanner("THEX");
+			createButtons();
+			addEventListeners();
 			
-			// create banner
+			if(animateIn)
+			{
+				this.y -= _stage.stageHeight;
+				_stage.addChild(this);
+				fadeIn();
+			}
+			else
+			{
+				_stage.addChild(this);
+			}
+		}
+		
+		protected function calculateResolutionDependentVariables():void
+		{
+			_bannerWidth = _stage.stageWidth*_bannerWidthScale;
+			_bannerHeight = _stage.stageHeight*_bannerHeightScale;
+			_buttonWidth = _stage.stageWidth*_buttonsWidthScale;
+			_buttonHeight = _stage.stageWidth*(_buttonsHeightScale/numberOfButtons-_interButtonScale);
+			_titleWidth = _stage.stageWidth*_titleWidthScale;
+			_titleHeight = _stage.stageHeight*_titleHeightScale;
+			_topMargin = _stage.stageHeight*_topMarginScale;
+			_buttonsTopMargin = _stage.stageHeight*_buttonsTopMarginScale;
+			_interbuttonMargin = _stage.stageHeight*_interButtonScale;
+		}
+		
+		protected function createBanner(title:String = ""):void
+		{
 			var _gradientMatrix:Matrix = new Matrix();
-			_gradientMatrix.createGradientBox(2*stage.fullScreenWidth, stage.stageHeight/2, Math.PI/2, 0, stage.stageHeight/4);
+			_gradientMatrix.createGradientBox(2*_stage.fullScreenWidth, _stage.stageHeight/2, Math.PI/2, 0, _stage.stageHeight/4);
 			_banner = new Sprite();
 			_banner.graphics.beginGradientFill(GradientType.LINEAR, [0xCCCCCC,0xAAAAAA], [1,1], [0,255], _gradientMatrix);
-			_banner.graphics.drawRect((stage.stageWidth-_bannerWidth)/2, (stage.stageHeight-_bannerHeight)/2, _bannerWidth, _bannerHeight);
+			_banner.graphics.drawRect((_stage.stageWidth-_bannerWidth)/2, (_stage.stageHeight-_bannerHeight)/2, _bannerWidth, _bannerHeight);
 			_banner.graphics.endFill();
 			this.addChild(_banner);
 			
-			// Create title
+			_banner.addChild(createTitle(title));
+		}
+		
+		private function createTitle(title:String):TextField {
 			var titleText:TextField = new TextField();
 			var titleTextFormat:TextFormat = new TextFormat("menuTitle", _titleHeight, 0xFFFFFF);
 			titleTextFormat.align = TextFormatAlign.CENTER;
 			titleText.defaultTextFormat = titleTextFormat;
 			titleText.embedFonts = true;
-			titleText.text = "thex";
+			titleText.text = title;
 			titleText.height = height;
 			titleText.width = width;
-			titleText.x = (stage.stageWidth - titleText.width)/2;
+			titleText.x = (_stage.stageWidth - titleText.width)/2;
 			titleText.y = _topMargin;
 			titleText.selectable = false;
-			_banner.addChild(titleText);
-			
-			
-			// Create buttons
+			return titleText;
+		}
+		
+		protected function createButtons():void
+		{
 			for (var i:uint=0; i < numberOfButtons; ++i)
 			{
 				_buttons[i].button = createButton(
 					_buttons[i], 
 					_buttonWidth, 
 					_buttonHeight,
-					(stage.stageWidth - _buttonWidth)/2,
+					(_stage.stageWidth - _buttonWidth)/2,
 					_titleHeight+_buttonsTopMargin+(i+1)*(_buttonHeight+_interbuttonMargin)
 				);
 			}
 			
 			toggleON(_activeButton = _buttons[0].button);
-			
-			if(animateIn)
-			{
-				this.y -= stage.stageHeight;
-				stage.addChild(this);
-				fadeIn();
-			}
-			else
-			{
-				stage.addChild(this);
-			}
-			
+		}
+		
+		private function addEventListeners():void {
 			ThexEventDispatcher.instance.addEventListener(MenuEvent.NEXT_ITEM, nextItem);
 			ThexEventDispatcher.instance.addEventListener(MenuEvent.PREVIOUS_ITEM, previousItem);
 			ThexEventDispatcher.instance.addEventListener(MenuEvent.SELECT, select);
@@ -176,9 +184,9 @@ package fr.manashield.flex.thex {
 				addEventListener(Event.ENTER_FRAME, fadeIn);
 			}
 			
-			if(_frame<=stage.frameRate*_fadeOutDuration)
+			if(_frame<=_stage.frameRate*_fadeOutDuration)
 			{
-				this.y += stage.stageHeight/(stage.frameRate*_fadeOutDuration);
+				this.y += _stage.stageHeight/(_stage.frameRate*_fadeOutDuration);
 			}
 			else
 			{
@@ -196,9 +204,9 @@ package fr.manashield.flex.thex {
 				addEventListener(Event.ENTER_FRAME, fadeOut);
 			}
 			
-			if(_frame<=stage.frameRate*_fadeOutDuration)
+			if(_frame<=_stage.frameRate*_fadeOutDuration)
 			{
-				this.y -= stage.stageHeight/(stage.frameRate*_fadeOutDuration);
+				this.y -= _stage.stageHeight/(_stage.frameRate*_fadeOutDuration);
 			}
 			else
 			{
@@ -220,7 +228,7 @@ package fr.manashield.flex.thex {
 			ThexEventDispatcher.instance.removeEventListener(MenuEvent.PREVIOUS_ITEM, previousItem);
 			ThexEventDispatcher.instance.removeEventListener(MenuEvent.SELECT, select);
 			
-			stage.removeChild(this);
+			_stage.removeChild(this);
 		}
 		
 		private function nextItem(e:Event = null):void
@@ -380,7 +388,7 @@ package fr.manashield.flex.thex {
 		
 		private function normal(e:Event = null):void
 		{
-			stage.focus = stage;
+			_stage.focus = stage;
 			ThexEventDispatcher.instance.dispatchEvent(new NewGameEvent());
 		}
 		

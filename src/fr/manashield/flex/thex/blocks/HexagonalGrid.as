@@ -1,4 +1,5 @@
 package fr.manashield.flex.thex.blocks {
+	import fr.manashield.flex.thex.utils.Color;
 	import fr.manashield.flex.thex.geometry.Hexagon;
 
 	import flash.display.Sprite;
@@ -20,7 +21,8 @@ package fr.manashield.flex.thex.blocks {
 		 */
 		public static function init(stage:Stage, cellRadius:int, width:int = 100, height:int = 100):void
 		{
-			_instance = new HexagonalGrid(stage, cellRadius, width, height);
+			_instance = new HexagonalGrid(stage, cellRadius, 0, width, height);
+			new Block(HexagonalGrid.instance.cell(new Point(0,0)), new Color(0x5c5c5c));
 		}
 		
 		/*
