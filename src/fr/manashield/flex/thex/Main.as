@@ -1,7 +1,8 @@
 package fr.manashield.flex.thex 
 {
-	import fr.manashield.flex.thex.events.MenuEvent;
+	import fr.manashield.flex.thex.blocks.HexagonalGrid;
 	import fr.manashield.flex.thex.events.GameOverEvent;
+	import fr.manashield.flex.thex.events.MenuEvent;
 	import fr.manashield.flex.thex.events.NewGameEvent;
 	import fr.manashield.flex.thex.events.PauseEvent;
 	import fr.manashield.flex.thex.events.ThexEventDispatcher;
@@ -23,8 +24,8 @@ package fr.manashield.flex.thex
 	public class Main extends Sprite 
 	{
 		protected var _currentUI:UserInteraction;
-		protected var _currentGame:Game;
 		protected var _menu:Menu;
+		private static const CELL_RADIUS:uint = 25;
 		
 		public function Main() : void
 		{
@@ -39,13 +40,13 @@ package fr.manashield.flex.thex
 		}
 
 		private function init(e:Event=null) : void
-		{			
+		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			EmbedFonts.init();
 			
 			_menu = new Menu(stage);
 			
-			_currentGame = new Game(stage);
+            HexagonalGrid.init(stage, CELL_RADIUS);
 			
 			_currentUI = new MenuUserInteraction(stage);
 			
@@ -60,13 +61,13 @@ package fr.manashield.flex.thex
 		private function resume(e:Event = null) : void
 		{
 			_currentUI = _currentUI.resume();
-			_currentGame.resume();
+			Game.instance.resume();
 		}
 		
 		private function pause(e:Event = null) : void
 		{
 			_currentUI = _currentUI.pause();
-			_currentGame.pause();
+			Game.instance.pause();
 			
 			stage.addChild(new PausePopup(stage));
 		}
@@ -74,7 +75,7 @@ package fr.manashield.flex.thex
 		private function gameOver(e:Event = null) : void
 		{
 			_currentUI = _currentUI.gameOver();
-			_currentGame.gameOver();
+			Game.instance.gameOver();
 			
 			stage.addChild(new GameOverPopup(stage));
 		}
@@ -82,19 +83,19 @@ package fr.manashield.flex.thex
 		private function gameWon(e:Event = null) : void
 		{
 			_currentUI = _currentUI.gameOver();
-			_currentGame.gameOver();
+			Game.instance.gameOver();
 			
 			stage.addChild(new GameWonPopup(stage));
 		}
 		
 		private function newGame(e:Event = null) : void
 		{
-			if(_currentGame == null)
+			if(Game.instance == null)
 			{
-				_currentGame = new Game(stage);
+				Game.init(stage);
 			}
 			
-			_currentGame.preLoad();
+			Game.instance.preLoad();
 			if(_menu)
 			{
 				_menu.fadeOut();
@@ -102,7 +103,7 @@ package fr.manashield.flex.thex
 			}
 			
 			_currentUI = _currentUI.newGame();
-			_currentGame.newGame();
+			Game.instance.newGame();
 		}
 		
 		private function menu(e:Event = null):void
@@ -110,7 +111,7 @@ package fr.manashield.flex.thex
 			if(this._menu == null)
 			{
 				this._menu = new Menu(stage, true);
-				_currentGame.gameOver();
+				Game.instance.gameOver();
 				_currentUI = _currentUI.menu();
 			}
 		}

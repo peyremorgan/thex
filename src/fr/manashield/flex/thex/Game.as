@@ -1,14 +1,14 @@
 package fr.manashield.flex.thex 
 {
-	import fr.manashield.flex.thex.utils.CellAlreadyOccupiedError;
-	import fr.manashield.flex.thex.blocks.HexagonalCell;
-	import fr.manashield.flex.thex.geometry.Sparkle;
-	import fr.manashield.flex.thex.events.ForceFallEvent;
-	import fr.manashield.flex.thex.events.RotateBlockEvent;
 	import fr.manashield.flex.thex.blocks.Block;
+	import fr.manashield.flex.thex.blocks.HexagonalCell;
 	import fr.manashield.flex.thex.blocks.HexagonalGrid;
+	import fr.manashield.flex.thex.events.ForceFallEvent;
 	import fr.manashield.flex.thex.events.GameOverEvent;
+	import fr.manashield.flex.thex.events.RotateBlockEvent;
 	import fr.manashield.flex.thex.events.ThexEventDispatcher;
+	import fr.manashield.flex.thex.geometry.Sparkle;
+	import fr.manashield.flex.thex.utils.CellAlreadyOccupiedError;
 	import fr.manashield.flex.thex.utils.Color;
 
 	import flash.display.Stage;
@@ -26,7 +26,17 @@ package fr.manashield.flex.thex
 	 */
 	public class Game
 	{
-		private static const CELL_RADIUS:uint = 25;
+		private static var _instance:Game;
+		public static function get instance():Game
+		{
+			return _instance;
+		}
+		
+		public static function init(stage:Stage):void
+		{
+			_instance = _instance?_instance:new Game(stage);
+		}
+		
 		private static const TICK_PERIOD:uint = 1000;
 		public static const TIMER_PERIOD:uint = 100;
 		
@@ -42,7 +52,6 @@ package fr.manashield.flex.thex
 		public function Game(stage:Stage):void
         {
             _stage = stage;
-            HexagonalGrid.init(_stage, CELL_RADIUS);
             HexagonalGrid.instance.addChild(createScoreField());
             addEventListeners();
         }
