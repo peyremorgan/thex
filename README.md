@@ -23,7 +23,6 @@ Found a bug ? [File it](https://github.com/peyremorgan/thex/issues) in the githu
 	- A-D level completion ratings (medals)
 -	Special tiles
 -	Arcade mode (survival)
--	Tile animations
 -	Settings menu
 	- Key bindings
 -	Social media buttons
